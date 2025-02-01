@@ -156,13 +156,14 @@ jobs:
 
         # RUN: executes a command on the runner (eg an instance) in the shell that's running on the runner
         #   dan: i also see mention of the github object
-        run: |
+#        run: |
+        run: echo "hola compadres, es mi primer GHA - dwc 1.31 10pm"
 
-          # DANTODO: at minute 13:00
-          echo "hola compadres, es mi primer GHA - dwc 1.31 10pm"
-          echo "howdy, ${{ github.event.inputs.name }}"
-          echo "your favvy cirty is ${{ github.event.inputs.city }}"
-          echo "you said this about your fav color ${{ github.event.inputs.fav-color-blue }}"
+          # # DANTODO: at minute 13:00
+          # echo "hola compadres, es mi primer GHA - dwc 1.31 10pm"
+          # echo "howdy, ${{ github.event.inputs.name }}"
+          # echo "your favvy cirty is ${{ github.event.inputs.city }}"
+          # echo "you said this about your fav color ${{ github.event.inputs.fav-color-blue }}"
 
 
 
