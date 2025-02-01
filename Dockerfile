@@ -17,6 +17,11 @@
 # PUSH  🟢🟢>> docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
 # uh maybe also 🟢🟢>> aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
 #
+# OTHER COMMANDS: docker ps, docker images, docker stop <id>, docker rm <id>, docker rmi <id>
+#
+# DANHERE 1.28 722pm: i want to use GHA to build and push this image to ECR
+#     tutorial: https://youtu.be/x7f9x30W_dI?si=krYP3kWI3b859pPj&t=31
+#
 ###########################################################
 
 # FROM golang:1.18-alpine AS build

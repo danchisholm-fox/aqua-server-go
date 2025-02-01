@@ -1,6 +1,8 @@
 ###################################################
 # DAN 1.28 8pm: started this file tonight
+#   MY FIRST GHA WORKFLOW!
 #
+# ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
 #
 ###################################################
 
@@ -141,24 +143,26 @@ jobs:
     # NAME: these seem to be the same as TAGs in aws
     name: "My first Job, a Greet one"
 
-    runs-on: ubuntu-latest # this ubunto is a github hosted runner
+    runs-on: 
+    - ubuntu-latest # this is a ubuntu is a github hosted runner
 
     # STEPS: a sequence of tasks  that will be run on this greet job (jobs->greet)
     #   they're powerful - there are premade actions, ones on the market place, or even executing scripts 
+    # DANHERE 1.31 11pm: it's breaking here when i run in GHA
     steps: 
 
       # NAME: these seem to be the same as TAGs in aws
       - name: "send the greeting"
 
-      # RUN: executes a command on the runner (eg an instance) in the shell that's running on the runner
-      #   dan: i also see mention of the github object
-      run: |
+        # RUN: executes a command on the runner (eg an instance) in the shell that's running on the runner
+        #   dan: i also see mention of the github object
+        run: |
 
-        # DANTODO: at minute 13:00
-        echo "hola compadres, es mi primer GHA - dwc 1.31 10pm"
-        echo "howdy, ${{ github.event.inputs.name }}"
-        echo "your favvy cirty is ${{ github.event.inputs.city }}"
-        echo "you said this about your fav color ${{ github.event.inputs.fav-color-blue }}"
+          # DANTODO: at minute 13:00
+          echo "hola compadres, es mi primer GHA - dwc 1.31 10pm"
+          echo "howdy, ${{ github.event.inputs.name }}"
+          echo "your favvy cirty is ${{ github.event.inputs.city }}"
+          echo "you said this about your fav color ${{ github.event.inputs.fav-color-blue }}"
 
 
 
