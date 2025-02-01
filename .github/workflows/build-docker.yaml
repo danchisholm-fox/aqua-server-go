@@ -144,7 +144,7 @@ jobs:
     name: "My first Job, a Greet one"
 
     runs-on: 
-    - ubuntu-latest # this is a ubuntu is a github hosted runner
+      - ubuntu-latest # this is a ubuntu is a github hosted runner
 
     # STEPS: a sequence of tasks  that will be run on this greet job (jobs->greet)
     #   they're powerful - there are premade actions, ones on the market place, or even executing scripts 
