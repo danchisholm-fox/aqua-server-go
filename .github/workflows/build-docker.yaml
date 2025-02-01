@@ -1,0 +1,165 @@
+###################################################
+# DAN 1.28 8pm: started this file tonight
+#
+#
+###################################################
+
+
+# NAME OF THE WORKFLOW: this is the name of the file
+name: Dans First GHA WF
+
+
+
+# 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥
+## PHASE 1: Defining the Condition that Triggers the Workflow
+# ON: This is the condition that triggers the workflow
+on: 
+  workflow_dispatch:    # this surfaces a button in the GHA UI; there has to be a version of this that on the defrault branch
+
+    inputs:
+      name: # so i thinks 'name' is like a constant (vs a variable)
+        description: 'Who to say hello to'
+        required: true # this is a required input (i guess in the stdin )
+        default: 'world'
+        type: string
+      city: # Constant number 2
+        description: "favorite city"
+        required: true
+        default: 'Seattle'
+        type: choice
+        options:
+          - New Yohk
+          - Satellite
+          - Lost Angels
+          - Dumbo
+      fav-color-blue:
+        description: "is the favvy favvy color blue?"
+        required: true
+        type: boolean
+# 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥 # 🔥
+
+
+
+
+
+# ##################### VERSION 1  - Docker Hub #####################
+# #
+# # Repo: https://www.youtube.com/watch?v=x7f9x30W_dI
+# #
+# # 🛑 STOP - this is not the right one to work on
+# # DAN 1.31: this is based on the demo on youtube, which is automation
+# #   to push a docker image to docker hub (not ECR)
+
+# name: Build and Push Docker Image to ECR - dwc
+
+# # dwc we are gonna do a manual button in GHA tab 
+# on:
+#   [workflow_dispatch]
+
+#   jobs:
+#     publish_images: # uh i think this is 
+#       runs-on: ubuntu-latest  # why use ubuntu when my Dockerfile uses 1.23-alpine
+#       steps:
+#       - name: dwc1 - check out the code
+#       - uses: actions/checkout@v4
+#       - name: dwc2 - login to ECR  # hmm, copilot suggested this, which seems right
+#         run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
+#       - name: dwc3 - build the Docker image
+#       # 👉👉👉👉 DANHERE 1.28 816pm i'm tired.  here's where i left off:
+#       #     https://youtu.be/x7f9x30W_dI?si=3GxRad1h9Nw8xjHH
+#         run: docker build -t 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-web-app:latest . # 🛑🛑 DANTODO: make sure this is the right image, and its not 
+#       # 👉👉👉👉
+
+
+
+
+
+
+
+##################### VERSION 2 - ECR template  #####################
+#
+#  Repo: https://github.com/kciter/aws-ecr-action
+#
+# # ✅ DAN 1.31 i grabbed this from a github repo that clamims do build and push to ECR
+#
+#  this is probably the right code snippit to start with after my demos
+#
+#   - name: AWS ECR
+#   # You may pin to the exact commit or the version.
+#   # uses: kciter/aws-ecr-action@ea6db9ecebec495c996b0f084c8ea1591f1185d7
+#   uses: kciter/aws-ecr-action@v5
+#   with:
+#     # The AWS access key id
+#     access_key_id: 
+#     # The AWS secret access key
+#     secret_access_key: 
+#     # AWS Account ID
+#     account_id: 
+#     # A comma-delimited list of AWS account IDs that are associated with the ECR registries. If you do not specify a registry, the default ECR registry is assumed
+#     registry_ids: # optional, default is 
+#     # A role to assume under the account_id account.
+#     assume_role: # optional, default is 
+#     # Name of your ECR repository
+#     repo: 
+#     # The AWS region
+#     region: 
+#     # Set this to true to create the repository if it does not already exist
+#     create_repo: # optional
+#     # Set this to true to set a policy on the repository
+#     set_repo_policy: # optional
+#     # Set this to repository policy statement json file. only used if the set_repo_policy is set to true
+#     repo_policy_file: # optional, default is repo-policy.json
+#     # Comma-separated string of ECR image tags
+#     tags: # optional, default is latest
+#     # Set this to True if you want AWS to scan your images for vulnerabilities
+#     image_scanning_configuration: # optional
+#     # Name of Dockerfile to use
+#     dockerfile: # optional, default is Dockerfile
+#     # Extra flags to pass to docker build (see docs.docker.com/engine/reference/commandline/build)
+#     extra_build_args: # optional, default is 
+#     # Images to use as cache for the docker build (see `--cache-from` argument docs.docker.com/engine/reference/commandline/build)
+#     cache_from: # optional, default is 
+#     # Path to Dockerfile, defaults to the working directory
+#     path: # optional, default is .
+#     # Relative path from top-level to script to run before Docker build
+#     prebuild_script: # optional
+
+
+
+
+
+##################### SNIPPIT 3 - Demo Only  #####################
+#
+#  Repo: https://github.com/mickeygoussetorg/gha-ecr-demo
+#
+#  💙💙💙 DAN 1.31: this is just for me to learn - can delete after this
+# 
+jobs:
+
+  greet:
+
+    # NAME: these seem to be the same as TAGs in aws
+    name: "My first Job, a Greet one"
+
+    runs-on: ubuntu-latest # this ubunto is a github hosted runner
+
+    # STEPS: a sequence of tasks  that will be run on this greet job (jobs->greet)
+    #   they're powerful - there are premade actions, ones on the market place, or even executing scripts 
+    steps: 
+
+      # NAME: these seem to be the same as TAGs in aws
+      - name: "send the greeting"
+
+      # RUN: executes a command on the runner (eg an instance) in the shell that's running on the runner
+      #   dan: i also see mention of the github object
+      run: |
+
+        # DANTODO: at minute 13:00
+        echo "hola compadres, es mi primer GHA - dwc 1.31 10pm"
+        echo "howdy, ${{ github.event.inputs.name }}"
+        echo "your favvy cirty is ${{ github.event.inputs.city }}"
+        echo "you said this about your fav color ${{ github.event.inputs.fav-color-blue }}"
+
+
+
+
