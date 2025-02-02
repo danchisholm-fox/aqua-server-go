@@ -6,7 +6,7 @@
 #
 ###################################################
 
-name: basic workflow dispatchio thingo
+name: 1. Dispatch - Testing Echo, nothing else.
 
 on: workflow_dispatch
 
@@ -15,7 +15,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "we did sumpin i guest it"
+      - run: echo "echo echo echo - we ran a workflow! (code 5783a3)"
 
 
  
