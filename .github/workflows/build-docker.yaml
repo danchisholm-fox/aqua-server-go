@@ -21,20 +21,6 @@ jobs:
 
 
 
-
-###################################################
-name: 2. Dispatch - Testing variables, well soon.
-
-on: workflow_dispatch
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "gonna add a var yes i will soonish"
-
-
-
  
 # jobs:
 #   my-job:
