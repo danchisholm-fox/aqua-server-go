@@ -10,13 +10,19 @@
 ###################################################
 name: 1. Dispatch - Testing Echo, nothing else.
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      environment: 
+        description: 'Env to deploy to (x80272)'
+        required: true
+        default: 'Prod'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "echo echo echo - we ran a workflow! (code 5783a3)"
+      - run: echo "Deploy diss to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
 
 
 
