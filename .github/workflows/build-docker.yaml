@@ -6,11 +6,22 @@
 #
 ###################################################
 
-name: hello-world
+name: basic workflow dispatchio thingo
+
 on: workflow_dispatch
+
+
 jobs:
-  my-job:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: my-step
-        run: echo "Hello Danno Feb 1 - dwc"
+      - run: echo "we did sumpin i guest it"
+
+
+ 
+# jobs:
+#   my-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: my-step
+#         run: echo "Hello Danno Feb 1 - dwc"
