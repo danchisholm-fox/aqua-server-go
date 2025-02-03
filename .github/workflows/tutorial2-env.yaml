@@ -8,15 +8,20 @@
 
 
 ###################################################
-name: 2. Inputs - Environments
+name: 2 Inputs - Environments
 
 on: 
   workflow_dispatch:
     inputs:
       environment: 
-        description: 'Select environment, por favor'
+        description: 'Env to deploy to (x80272)'
         required: true
-        type: environment
+        default: 'Prod'
+        type: choice
+        options: 
+          - Prod
+          - QA
+          - Dev
 
 jobs:
   deploy:
