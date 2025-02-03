@@ -22,7 +22,7 @@ on:
         description: 'Send email confirmation?'
         required: true
         type: boolean
-        default: true
+        default: false
 
 jobs:
   deploy:
