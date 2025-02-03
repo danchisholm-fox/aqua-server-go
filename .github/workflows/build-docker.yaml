@@ -27,7 +27,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "DWC: Deploying to ${{ github.event.inputs.environment }} environment (code 57w3vv)."
+      - run: echo "Deploying diss to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
 
 
 
