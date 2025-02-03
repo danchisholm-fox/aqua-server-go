@@ -26,4 +26,4 @@ jobs:
 
       # Runs a runner
       name: Run a one-line script
-      run: echo yoiko woiko bing bong
+      run: echo "yoiko woiko bing bong"
