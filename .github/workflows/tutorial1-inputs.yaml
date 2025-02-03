@@ -1,0 +1,41 @@
+###################################################
+# DAN 1.28 8pm: started this file tonight
+#   MY FIRST GHA WORKFLOW!
+#
+# ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
+#
+###################################################
+
+
+###################################################
+name: 1. Dispatch - Testing Echo, nothing else.
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment: 
+        description: 'Env to deploy to (x80272)'
+        required: true
+        default: 'Prod'
+        type: choice
+        options: 
+          - Prod
+          - QA
+          - Dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying diss to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
+
+
+
+
+ 
+# jobs:
+#   my-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: my-step
+#         run: echo "Hello Danno Feb 1 - dwc"
