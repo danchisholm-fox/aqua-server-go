@@ -1,0 +1,29 @@
+###################################################
+# DANHERE 2.2 730pm: working on 2nd GHA action
+####### #####   ############  ##################
+#
+# ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
+#
+###################################################
+
+
+###################################################
+name: 4 Push and Pull
+
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Runs a runner
+      name: Run a one-line script
+      run: echo yoiko woiko bing bong
