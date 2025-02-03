@@ -1,6 +1,7 @@
 ###################################################
-# DAN 1.28 8pm: started this file tonight
-#   MY FIRST GHA WORKFLOW!
+# DANHERE 2.2 730pm: working on 2nd GHA action
+####### #####   ############  ##################
+####### #####   ############  ##################
 #
 # ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
 #
@@ -16,12 +17,7 @@ on:
       environment: 
         description: 'Env to deploy to (x80272)'
         required: true
-        default: 'Prod'
-        type: choice
-        options: 
-          - Prod
-          - QA
-          - Dev
+        type: environment
 
 jobs:
   deploy:
