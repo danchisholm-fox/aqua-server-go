@@ -9,13 +9,13 @@
 
 
 ###################################################
-name: 3 Multiple Jobs
+name: 2 Inputs - Environments
 
 on: 
   workflow_dispatch:
     inputs:
       environment: 
-        description: 'Environment to DEPLOY to::'
+        description: 'Environment to deploy to::'
         required: true
         type: environment
       notify: 
@@ -28,7 +28,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "TUT3: Deploying to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
+      - run: echo "dwc Deploying to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
+
+
+
+
+ 
 # jobs:
 #   my-job:
 #     runs-on: ubuntu-latest
