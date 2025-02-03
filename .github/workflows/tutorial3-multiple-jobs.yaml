@@ -30,13 +30,6 @@ jobs:
     steps:
       - run: echo "TUT3: Deploying to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
 
-  notify:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.notify == 'true' }}
-    steps:
-      - run: echo "TUT3: Sent email confirmation to user"
-
-
 
  
 # jobs:
