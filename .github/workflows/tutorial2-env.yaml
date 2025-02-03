@@ -8,7 +8,7 @@
 
 
 ###################################################
-name: 2 Inputs - Environments
+name: 2. Inputs - Environments
 
 on: 
   workflow_dispatch:

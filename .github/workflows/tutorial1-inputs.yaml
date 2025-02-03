@@ -8,7 +8,7 @@
 
 
 ###################################################
-name: 1. Dispatch - Testing Echo, nothing else.
+name: 1. Echo & Inputs
 
 on: 
   workflow_dispatch:
