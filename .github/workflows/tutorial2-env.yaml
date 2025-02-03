@@ -15,12 +15,16 @@ on:
   workflow_dispatch:
     inputs:
       environment: 
-        description: 'Env to deploy to (x80272)'
+        description: 'Environment to deploy to::'
         required: true
         type: environment
       notify: 
-        description: 'Confirm notification yo'
+        description: 'Send email confirmation?'
         required: true
+        type: boolean
+        default: true
+      notify:
+        description: 'Force override?
         type: boolean
         default: false
 
