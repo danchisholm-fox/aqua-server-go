@@ -33,8 +33,8 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.notify }}
-      steps:
-        - run: echo "** Email notification was indeed sent to users"
+   steps:
+      - run: echo "** Email notification was indeed sent to users"
 #    if: ! ${{ github.event.inputs.notify }}
 #    steps:
 #      - run: echo "!!! Email notification WAS NOT sent to users"    
