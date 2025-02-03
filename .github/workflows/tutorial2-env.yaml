@@ -23,10 +23,6 @@ on:
         required: true
         type: boolean
         default: true
-      notify:
-        description: 'Force override?
-        type: boolean
-        default: false
 
 jobs:
   deploy:
