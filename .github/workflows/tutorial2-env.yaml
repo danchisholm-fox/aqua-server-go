@@ -18,6 +18,11 @@ on:
         description: 'Env to deploy to (x80272)'
         required: true
         type: environment
+      notify: 
+        description: 'Confirm notification yo'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   deploy:
