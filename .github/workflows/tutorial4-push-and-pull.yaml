@@ -1,9 +1,9 @@
 ###################################################
-# DANHERE 2.2 730pm: working on 2nd GHA action
+# DAN 2.2 Setting up automatic deploy when pushing code
 ####### #####   ############  ##################
 #
 # ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
-#
+# DANHERE 2.2 930pm: the 'deploy' command below works, now need to try 'build' then docker to ECR
 ###################################################
 
 
@@ -21,5 +21,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: echo "gettin buildidd diss to ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
+      - run: echo "Upon push deploy this Docker image to ECK ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
 
