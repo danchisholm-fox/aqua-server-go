@@ -16,14 +16,10 @@ on:
   pull_request:
     branches: [ main ]
 
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
+      - run: echo "gettin buildidd diss to ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
 
-      # Runs a runner
-      name: Run a one-line script
-      run: echo "yoiko woiko bing bong"
