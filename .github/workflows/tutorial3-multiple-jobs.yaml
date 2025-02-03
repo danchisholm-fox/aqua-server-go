@@ -35,9 +35,9 @@ jobs:
     if: ${{ github.event.inputs.notify }}
     steps:
       - run: echo "** Email notification was indeed sent to users"
-    if: ! ${{ github.event.inputs.notify }}
-    steps:
-      - run: echo "!!! Email notification WAS NOT sent to users"    
+#    if: ! ${{ github.event.inputs.notify }}
+#    steps:
+#      - run: echo "!!! Email notification WAS NOT sent to users"    
 
 
 
