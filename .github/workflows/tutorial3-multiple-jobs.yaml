@@ -1,0 +1,47 @@
+###################################################
+# DANHERE 2.2 730pm: working on 2nd GHA action
+####### #####   ############  ##################
+####### #####   ############  ##################
+#
+# ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
+#
+###################################################
+
+
+###################################################
+name: 3 Multiple Jobs
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment: 
+        description: 'Environment to DEPLOY to::'
+        required: true
+        type: environment
+      notify: 
+        description: 'Send email confirmation?'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "TUT3: Deploying to ${{ github.event.inputs.environment }} environment (code 57w3vv )"
+
+  notify:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.notify == 'true' }}
+    steps:
+      - run: echo "TUT3: Sent email confirmation to user"
+
+
+
+ 
+# jobs:
+#   my-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: my-step
+#         run: echo "Hello Danno Feb 1 - dwc"
