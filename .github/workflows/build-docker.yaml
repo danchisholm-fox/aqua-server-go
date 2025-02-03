@@ -17,6 +17,11 @@ on:
         description: 'Env to deploy to (x80272)'
         required: true
         default: 'Prod'
+        type: choice
+        options: 
+          - Prod
+          - QA
+          - Dev
 
 jobs:
   deploy:
