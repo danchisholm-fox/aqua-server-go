@@ -11,8 +11,6 @@
 name: 4 Pull Autmation
 
 on: 
-#  push:
-#    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -21,5 +19,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: echo "4 INSERT HERE automation to run when pulling the Github repo in the ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
+      - run: echo "4 Insert duh POOL otter-mation to run when pulling the Github repo in the ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
 
