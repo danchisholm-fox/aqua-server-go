@@ -8,18 +8,18 @@
 
 
 ###################################################
-name: 4 Pull Autmation
+name: 5 Push to Build
 
 on: 
-#  push:
-#    branches: [ main ]
-  pull_request:
+  push:
     branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: echo "4 INSERT HERE automation to run when pulling the Github repo in the ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
+      - run: echo "5 INSERT AUTOMATION HERE - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
 
