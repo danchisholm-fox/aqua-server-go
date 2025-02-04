@@ -19,8 +19,6 @@
 #
 # OTHER COMMANDS: docker ps, docker images, docker stop <id>, docker rm <id>, docker rmi <id>
 #
-# DANHERE 1.28 722pm: i want to use GHA to build and push this image to ECR
-#     tutorial: https://youtu.be/x7f9x30W_dI?si=krYP3kWI3b859pPj&t=31
 #
 ###########################################################
 
