@@ -8,6 +8,8 @@
 # GOOD DOCS
 # Github Actions 'on' event types: https://docs.github.com/en/actions/reference/events-that-trigger-workflows
 #   same doc? https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
+# Github Container Registry: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+#     sheesh how many registries do i need - ECR, DockerHub, Github Container Registry
 ###################################################
 
 
@@ -30,7 +32,13 @@ jobs:
       - name: Summary blahbuooek
         run: echo "5 Insert PUSH automation - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
       - name: Build the Docker image
-        run: docker build -t aqua-server-1 ../aqua-server-go
+#        run: docker build -t aqua-server-1 ../aqua-server-go  # DAN 2.4 607pm: this indeed works and builds on GH (just dunno where that build ends up afterwards)
+        run: |
+          docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s)
+          ls -al
+          pwd
+#          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+#          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
 
 
 # DANHERE 2.3 915pm: from NANA this may help me automate the build of the docker image
