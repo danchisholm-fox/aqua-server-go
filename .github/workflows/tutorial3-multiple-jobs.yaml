@@ -32,7 +32,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.notify }} # DAN 2.3:534pm: this conditional does not seem to work - it always runs
+    if: ${{ github.event.inputs.notify }} # DAN 2.3:534pm: this conditional does not seem to work -
     steps:
       - run: echo "** Email notification was indeed sent to users"
 #    if: ! ${{ github.event.inputs.notify }}

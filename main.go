@@ -5,7 +5,7 @@
 // 🟢🟢>> go run main.go
 //
 // See Youtube tutorial here: https://www.youtube.com/watch?v=eqvDSkuBihs
-//
+// d
 //
 //  TODO 1.15.25: none right now (need to focus on Docker and TF)
 //
@@ -16,6 +16,15 @@
 //   DAN 1.11.25 annnnd we're back after a few months and after the new year
 //   to set up docker with go dont forget you have to run commandline: go mod init blue2woo.com/m
 //    which i have no idea what it does.  but afterward your 'docker build" will work
+//
+//  Git Commands 2.4.25
+//		git diff
+//		git status
+//		git 
+//		git commit -am // the 'a' here is for all, but really just means 'add' so you can skip 'git add'
+//		git config -l // lists all commit configs
+//      // COMING SOON - Tony Teaches Tech - https://www.youtube.com/watch?v=yxvqLBHZfXk
+//		TODO
 //
 ///////////////////////////////////////////////////////////////////////////
 

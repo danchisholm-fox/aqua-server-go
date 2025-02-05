@@ -10,6 +10,7 @@
 ###################################################
 name: 4 Pull Autmation
 
+# DAN 2.3: btw as of today i dont do PRs, so this automation (ie this event) will never run
 on: 
   pull_request:
     branches: [ main ]

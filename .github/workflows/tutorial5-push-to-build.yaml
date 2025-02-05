@@ -4,6 +4,10 @@
 #
 # ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
 # DANHERE 2.2 930pm: the 'deploy' command below works, now need to try 'build' then docker to ECR
+#
+# GOOD DOCS
+# Github Actions 'on' event types: https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+#   same doc? https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
 ###################################################
 
 
@@ -11,8 +15,10 @@
 name: 5 Push to Build
 
 on: 
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+# DAN 2.4.539pm: commenting out just so i can manually run while i test
+#  push:
+#    branches: [ main ]
 #  pull_request:
 #    branches: [ main ]
 
@@ -21,5 +27,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: echo "5 Insert PUSH automation - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
+      - name: Summary blahbuooek
+        run: echo "5 Insert PUSH automation - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
+      - name: Build the Docker image
+        run: docker build -t aqua-server-1 ../aqua-server-go
 
+
+# DANHERE 2.3 915pm: from NANA this may help me automate the build of the docker image
+#      https://youtu.be/R8_veQiYBjI?si=k3d_ArZs9gH0HKVn&t=1119
+#  
+#   steps:
+#     - uses: actions/checkout@v2
+#
+#     - name: do the docker image build
+#       uses: docker/build-push-action@v2
+#       # or maybe actions/somthin-for-docker-buildin (dwc)
+#
+#     - name: push the docker image to ECR
+#       uses: aws-actions/amazon-ecr-login@v2
+#
