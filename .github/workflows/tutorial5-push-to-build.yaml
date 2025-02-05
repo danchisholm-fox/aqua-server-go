@@ -41,6 +41,10 @@ jobs:
           docker ps
           ls -al
           pwd
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com)
+          docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+
 #          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
 # 🔥🔥🔥🔥 DANHERE 🔥 2.4:  prior to doing the below *docker push*:
 #                 1. i need to get the keys from my AWS ECR 
@@ -48,7 +52,6 @@ jobs:
 #                 3. push the image to ECR
 #                 4. then start the image running on ECS
 # DAN 2.4 8pm:  The below is copilot generated but looks close to what i need re ECR
-#  - need to login to ECR (aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com)
 #  - need to tag the image (docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest)
 #  - then push the image (docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest)
 #          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
