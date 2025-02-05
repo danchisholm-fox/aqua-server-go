@@ -33,8 +33,12 @@ jobs:
         run: echo "5 Insert PUSH automation - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
       - name: Build the Docker image
 #        run: docker build -t aqua-server-1 ../aqua-server-go  # DAN 2.4 607pm: this indeed works and builds on GH (just dunno where that build ends up afterwards)
+#        run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
+
         run: |
-          docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s)
+          docker build -t aqua-server-1 ../aqua-server-go
+          docker images
+          docker ps
           ls -al
           pwd
 #          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
