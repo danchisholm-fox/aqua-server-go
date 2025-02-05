@@ -18,6 +18,7 @@
 //    which i have no idea what it does.  but afterward your 'docker build" will work
 //
 //  Git Commands 2.4.25
+//		git add  (basically moves these to the 'staging' area, which is all files that'll get committed)
 //		git diff
 //		git status
 //		git 

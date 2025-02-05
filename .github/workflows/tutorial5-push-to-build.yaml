@@ -42,6 +42,7 @@ jobs:
           ls -al
           pwd
 #          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+# DAN 2.4: of course prior to doing docker push, i have to run TF to create the ECR repo
 #          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
 
 
