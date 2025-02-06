@@ -90,19 +90,20 @@ jobs:
           
       - name: 6 Writing out some info re ECR, ECS, Container, --task
         run: |
-          echo "🟨🟨🟨🟨 ECS List of Clusters 🟨🟨🟨🟨"
+          echo 
+          echo "🟨🟨🟨🟨 aws ecs list-clusters 🟨🟨🟨🟨"
           aws ecs list-clusters
-          echo "🟩🟩🟩🟩 ECS Describe Clusters 🟩🟩🟩🟩"
+          echo "🟩🟩🟩🟩 aws ecs describe-clusters 🟩🟩🟩🟩"
           aws ecs describe-clusters
-          echo "🎟️🎟️🎟️🎟️ ECS Container Info for Aqua - none bc i dont have EC2 runnin 🎟️🎟️🎟️🎟️"
+          echo "🎟️🎟️🎟️🎟️ aws ecs list-container-instances --cluster aqua-ecs-cluster-name 🎟️ empty for now since EC2 in TF is commented out 🎟️🎟️🎟️🎟️"
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
-          echo "💙💙💙💙 ECS Task Definitions (better not be empty) 💙💙💙💙"
+          echo "💙💙💙💙 aws ecs list-task-definitions 💙 Should have the TF definition for Aqua 💙💙💙💙"
           aws ecs list-task-definitions
-          echo "🟪🟪🟪🟪 ECS List Services (once its running there should be sumpin here) 🟪🟪🟪🟪"
+          echo "🟪🟪🟪🟪 aws ecs list-services --cluster aqua-ecs-cluster-name 🟪 Once running it should show aqua service 🟪🟪🟪🟪"
           aws ecs list-services --cluster aqua-ecs-cluster-name
-          echo "🟧🟧🟧🟧 ecs list-tasks --cluster aqua-ecs-cluster-name << List Tasks (should be empty since i have a Service) 🟧🟧🟧🟧"
+          echo "🟧🟧🟧🟧 aws ecs list-tasks --cluster aqua-ecs-cluster-name 🟧 Should always be empty since i'm using services not tasks 🟧🟧🟧🟧"
           aws ecs list-tasks --cluster aqua-ecs-cluster-name
-          echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
+          echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬ DONE ⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
 
 
 # # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
