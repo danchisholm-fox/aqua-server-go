@@ -41,7 +41,7 @@ jobs:
 
 
       - name: 3 Authenticate GHA with AWS -------------------------
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -55,6 +55,7 @@ jobs:
 #    - 3 and instead have GHA start the container
 #    - 4 i need to check why the size that ECR shows the image being 100mb is so much smaller than locally 400mb (compressed?)
 #    - 5 get rid of the sleep value below and replace with an if conditional or needs or something
+#    - 6 upgrade my aws thing to v3 from v2
 #
 # 🔎 FYI only: AWS ENV Variables: https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings
 
