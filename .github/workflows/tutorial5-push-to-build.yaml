@@ -29,12 +29,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Summary blahbuooek
+      - name: 1 EKKO EKKO - nothing more -------------------------
         run: echo "5 Insert PUSH automation - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
-      - name: Build the Docker image
-#        run: docker build -t aqua-server-1 ../aqua-server-go  # DAN 2.4 607pm: this indeed works and builds on GH (just dunno where that build ends up afterwards)
-#        run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
 
+      - name: 2 Authenticate GHA with AWS -------------------------
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+
+
+      - name: 3 Build-n-Push the Docker image up to ECR -------------------------
+#        run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
         run: |
           docker build -t aqua-server-1 ../aqua-server-go
           docker images
@@ -55,6 +63,40 @@ jobs:
 #  - need to tag the image (docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest)
 #  - then push the image (docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest)
 #          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+#
+# 🔎 AWS ENV Variables: https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings
+
+
+
+# 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧
+#  DAN 2.5.25 4pm: the below MAY / MAY NOT be needed.  it is how to actually config creds for aws
+#      but i dont need to config them; i just need to pass them, right?
+#
+# on:
+#   push:
+#     branches:
+#       - main
+#
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ${{ secrets.AWS_REGION }}
+#
+#       - name: Get AWS secrets
+#         uses: aws-actions/aws-secretsmanager-get-secrets@v1
+#         with:
+#           secret-ids: |
+#             YOUR_KEY
+#           parse-json-secrets: true
+#
+#       - name: Print all Values
+# 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧
 
 
 # DANH 2.3 915pm: from NANA this may help me automate the build of the docker image
