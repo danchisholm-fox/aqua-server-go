@@ -62,14 +62,22 @@ jobs:
 
 # # DANHERE 2.5.25 627pm: i think i need that ecr-login step here
 # # oohh! i think it's because the previous step hasnt finished yet; so i need a 'depends-on' or 'needs' or something
-#   pushDeeImage:
-#     needs: buildDahImage
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
+#
+#    714pm, hmm no  it isnt.  here's the msg,
+#       The push refers to repository [***.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name]
+#       An image does not exist locally with the tag: ***.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name
+#
+#       but there is indeed a repo with URI: 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name
+#         and this image exists: 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name
+#      IDEAS: maybe the tag name is wrong, or i'm including too much of the repo URI, or i should use the repo NAME not the URL
+#       🤔🤔🤔🤔🤔 it has to be either the tag name or the repo name
       - name: 5 Push the Image to ECR -------------------------
         run: |
+          echo dwc region is ${{ env.AWS_REGION }} PERIOD
+          echo dwc key is ${{ secrets.AWS_ACCESS_KEY_ID }} PERIOD
+          echo --- DOCKER IMAGES before PUSH ---
           docker images
+          echo -------------------- END --------------------------
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
 #          docker push aqua-server-1:latest
           
