@@ -23,7 +23,7 @@ on:
 #    branches: [ main ]
 
 jobs:
-  buildDahImage:
+  build-push-run-job:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -90,18 +90,19 @@ jobs:
           
       - name: 6 Writing out some info re ECR, ECS, Container, --task
         run: |
-          echo WWWWWWWWWWWW ECS List of Clusters WWWWWWWWWWWW
+          echo "🟨🟨🟨🟨 ECS List of Clusters 🟨🟨🟨🟨"
           aws ecs list-clusters
-          echo XXXXXXXXXXXXX ECS Describe Clusters XXXXXXXXXXXXX
+          echo "🟩🟩🟩🟩 ECS Describe Clusters 🟩🟩🟩🟩"
           aws ecs describe-clusters
-          echo TTTTTTTTTT ECS Container Info for Aqua - none bc i dont have EC2 runnin TTTTTTTTTT
+          echo "🎟️🎟️🎟️🎟️ ECS Container Info for Aqua - none bc i dont have EC2 runnin 🎟️🎟️🎟️🎟️"
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
-          echo "+++++++++ 💙💙 ECS Task Definitions (better not be empty) +++++++++"
+          echo "💙💙💙💙 ECS Task Definitions (better not be empty) 💙💙💙💙"
           aws ecs list-task-definitions
-          echo "OOOOOOOOOOO ECS List Services (once its running there should be sumpin here) OOOOOOOOOOO"
+          echo "🟪🟪🟪🟪 ECS List Services (once its running there should be sumpin here) 🟪🟪🟪🟪"
           aws ecs list-services --cluster aqua-ecs-cluster-name
           echo "🟧🟧🟧🟧 ecs list-tasks --cluster aqua-ecs-cluster-name << List Tasks (should be empty since i have a Service) 🟧🟧🟧🟧"
           aws ecs list-tasks --cluster aqua-ecs-cluster-name
+          echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
 
 
 # # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
