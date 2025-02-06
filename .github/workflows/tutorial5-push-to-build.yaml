@@ -37,8 +37,6 @@ jobs:
       - name: 2 Build the Docker Image -------------------------
         run: |
           docker build -t aqua-server-1 ../aqua-server-go
-          docker images
-          docker ps
           ls -al
           pwd
 
@@ -52,8 +50,12 @@ jobs:
 
 
 
-      - name: 4 Tag the Image (never been sure why) -------------------------
-        run: docker tag aqua-server-1:latest 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+      - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
+        run: |
+          docker tag aqua-server-1:latest 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker images
+          docker ps
+
 
 
 # DANHERE 2.5.25 627pm: i think i need that ecr-login step here
