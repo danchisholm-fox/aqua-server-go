@@ -97,11 +97,11 @@ jobs:
           aws ecs describe-clusters
           echo TTTTTTTTTT ECS Container Info for Aqua - none bc i dont have EC2 runnin TTTTTTTTTT
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
-          echo "+++++++++ ECS Task Definitions (better not be empty) +++++++++"
+          echo "+++++++++ 💙💙 ECS Task Definitions (better not be empty) +++++++++"
           aws ecs list-task-definitions
-          echo OOOOOOOOOOO ECS List Services (once its running there should be sumpin here) OOOOOOOOOOO
+          echo "OOOOOOOOOOO ECS List Services (once its running there should be sumpin here) OOOOOOOOOOO"
           aws ecs list-services --cluster aqua-ecs-cluster-name
-          echo PPPPPP List Tasks (should be empty since i have a Service) PPPPPP
+          echo "🟧🟧🟧🟧 ecs list-tasks --cluster aqua-ecs-cluster-name << List Tasks (should be empty since i have a Service) 🟧🟧🟧🟧"
           aws ecs list-tasks --cluster aqua-ecs-cluster-name
 
 
