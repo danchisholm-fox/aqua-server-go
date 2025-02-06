@@ -25,7 +25,7 @@ on:
 #    branches: [ main ]
 
 jobs:
-  deploy:
+  buildDahImage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -52,6 +52,7 @@ jobs:
 
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
         run: |
+          docker images
           docker tag aqua-server-1:latest 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           docker images
           docker ps
@@ -59,8 +60,16 @@ jobs:
 
 
 # DANHERE 2.5.25 627pm: i think i need that ecr-login step here
+# oohh! i think it's because the previous step hasnt finished yet; so i need a 'depends-on' or 'needs' or something
+  pushDeeImage:
+    needs: buildDahImage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: 5 Push the Image to ECR -------------------------
-        run: docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+        run: |
+          docker images
+          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
 
 
