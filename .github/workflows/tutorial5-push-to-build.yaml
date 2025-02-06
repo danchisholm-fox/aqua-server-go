@@ -50,7 +50,8 @@ jobs:
 
 #  DANTODO 2.6: 
 #    - 1 i need to remove the hardcoded values like region and in the tag, and replace with variables
-#    - 2 then i need to remove the terraform resource to start up the ECS container because that isnt
+#            which works fine if the vars have whitespaces on each side; but in strings i dont know the syntax yet
+#    - DONE - 2 then i need to remove the terraform resource to start up the ECS container because that isnt
 #      really infrastructure, 
 #    - 3 and instead have GHA start the container
 #    - 4 i need to check why the size that ECR shows the image being 100mb is so much smaller than locally 400mb (compressed?)
@@ -88,6 +89,43 @@ jobs:
           echo -------------------- END --------------------------
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
+      - name: 6 Writig out some info re ECR, ECS, Container, --task
+        run: |
+          echo ******* ECS List of Clusters ********
+          aws ecs list-clusters
+          echo ******* ECS Describe Clusters ********
+          aws ecs describe-clusters
+          echo TTTTTTTTTT ECS Container Info for Aqua (none bc i dont have EC2 runnin) TTTTTTTTTT
+          aws ecs list-container-instances --cluster aqua-ecs-cluster-name
+          echo +++++++++ ECS Task Definitions (better not be empty) +++++++++
+          aws ecs list-task-definitions
+          echo OOOOOOOOOOO ECS List Services (once its running there should be sumpin here) OOOOOOOOOOO
+          aws ecs list-services --cluster aqua-ecs-cluster-name
+          echo PPPPPP List Tasks (should be empty since i have a Service) PPPPPP
+          aws ecs list-tasks --cluster aqua-ecs-cluster-name
+
+
+# # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
+# # 💄💄💄💄💄 DANHERE 2.6.25 11am: trying to run the image from GHA
+#       - name: 7 Run the Image -------------------------
+#         run: |
+#           aws ecs execute-command \
+#           --region us-east-1 \
+#           --cluster aqua-ecs-cluster-name \
+#           --task ECS_TASK_ID \
+#           --container aqua-server-da-container \
+#           --command "/bin/bash" \
+#           --interactive
+
+
+# 2.6 11am Reference from Google AI
+          # aws ecs execute-command \
+          # --region us-east-1 \
+          # --cluster ECS_CLUSTER_NAME \
+          # --task ECS_TASK_ID \
+          # --container CONTAINER_NAME \
+          # --command "/bin/bash" \
+          # --interactive
 
           
 # 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧
