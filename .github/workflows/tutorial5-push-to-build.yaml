@@ -29,37 +29,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: 1 EKKO EKKO - nothing more -------------------------
-        run: echo "5 Insert PUSH automation - Push and build this Docker image to ECR ${{ github.event.inputs.environment }} environment (code sdfasd332 )"
-
-      - name: 2 Authenticate GHA with AWS -------------------------
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ${{ secrets.AWS_REGION }}
-          aws-region: us-east-1
+      - name: 1 Starting the Build'n'Push Process -------------------------
+        run: echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
 
 
-
-
-      - name: 3 Build-n-Push the Docker image up to ECR -------------------------
-#        run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
+#       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
+      - name: 2 Build the Docker Image -------------------------
         run: |
           docker build -t aqua-server-1 ../aqua-server-go
           docker images
           docker ps
           ls -al
           pwd
+
+
+      - name: 3 Authenticate GHA with AWS -------------------------
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+
+# DANHERE 2.5.25 627pm: i think i need that ecr-login step here
+
+      - name: 4 Tag & Push the Image to ECR -------------------------
+        run: |
           docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
+
 
 # probably not need -           aws ecr get-login-password --region us-east-1
 # probably not needed           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
 
 #          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
-# 🔥🔥🔥🔥 DANHERE 🔥 2.5:  prior to doing the below *docker push*:
+# DAN  2.5:  prior to doing the below *docker push*:
 #                 1. DONE - i need to get the keys from my AWS ECR 
 #                 2. DONE - log into ECR
 #                  2a.  WHY am i doing 'docker login' - what the heck is that; i dont need to log into docker

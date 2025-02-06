@@ -10,7 +10,7 @@
 # BUILD 🟢🟢>> docker build -t aqua-server-1 ../aqua-server-go
 # RUN      >> docker run -d -p 127.0.0.1:8062:8080 aqua-server-1  # only if you want to run this locally
 #                 fyi, To Run a container in the above, 8062 is the host's port, so 8080 is the container's. running the v5 image of aqua
-# TAG   🟢🟢>> docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+# TAG   🟢🟢>> docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
 #                  TODO 1.15.24: but how do i get that ECR URI?  i think i have to go to the ECR console and copy it from there
 #                   which i wont have access to until i create the ECR repo... so how do i do this with automation?
 #                   which youtube video or TF doc did i read that showed me how to do this?
