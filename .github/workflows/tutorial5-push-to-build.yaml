@@ -26,14 +26,10 @@ on:
 jobs:
   buildDahImage:
     runs-on: ubuntu-latest
-    env:
-      ECR_REGION = ${{ env.AWS_REGION }}
     steps:
       - uses: actions/checkout@v2
       - name: 1 Starting the Build'n'Push Process -------------------------
-        run: |
-          echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
-          echo ecr region var is $ECR_REGION YUP
+        run: echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
 
 
 #       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
@@ -49,7 +45,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: $ECR_REGION
+          aws-region: us-east-1
 
 
 #  DANTODO 2.6: 
@@ -68,7 +64,7 @@ jobs:
 
       - name: 3a. Login to ECR -------------------------
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
           echo --------- completed ECR login ----------------
 
 
@@ -84,8 +80,7 @@ jobs:
 
       - name: 5 Push the Image to ECR -------------------------
         run: |
-          echo dwc aws region is ${{ env.AWS_REGION }} PERIOD
-          echo dwc and ecr_region is $ECR_REGION PERIOD
+          echo dwc region is ${{ env.AWS_REGION }} PERIOD
           echo dwc key is ${{ secrets.AWS_ACCESS_KEY_ID }} PERIOD
           echo dwc ACcouNT is ${{ env.AWS_ACCOUNT_ID }} PERIOD
           echo --- DOCKER IMAGES before PUSH ---
