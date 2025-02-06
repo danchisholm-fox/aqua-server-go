@@ -13,7 +13,7 @@
 
 
 ###################################################
-name: 5 Push to Build
+name: 5 Build-Push-Run Image
 
 on: 
   workflow_dispatch:
@@ -45,26 +45,29 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
 
-# # DANHERE 2.6 num1: i think i need that ecr-login step here
-#    account typo was fixed, now during 'docker push',  i see "no basic auth credentials"
-#      which is likely the ecr-login step
-#   see: https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+#  DANTODO 2.6: 
+#    - 1 i need to remove the hardcoded values like region and in the tag, and replace with variables
+#    - 2 then i need to remove the terraform resource to start up the ECS container because that isnt
+#      really infrastructure, 
+#    - 3 and instead have GHA start the container
+#    - 4 i need to check why the size that ECR shows the image being 100mb is so much smaller than locally 400mb (compressed?)
+#    - 5 get rid of the sleep value below and replace with an if conditional or needs or something
 #
-#      aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
-####
+# 🔎 FYI only: AWS ENV Variables: https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings
+
       - name: 3a. Login to ECR -------------------------
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
           echo --------- completed ECR login ----------------
 
 
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
         run: |
           docker images
-          docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker tag aqua-server-1:latest ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           sleep 8
           docker images
           docker ps
@@ -79,29 +82,10 @@ jobs:
           echo --- DOCKER IMAGES before PUSH ---
           docker images
           echo -------------------- END --------------------------
-          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
 
-
-# probably not need -           aws ecr get-login-password --region us-east-1
-# probably not needed           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
-
-#          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
-# DAN  2.5:  prior to doing the below *docker push*:
-#                 1. DONE - i need to get the keys from my AWS ECR 
-#                 2. DONE - log into ECR
-#                  2a.  WHY am i doing 'docker login' - what the heck is that; i dont need to log into docker
-#                 3. push the image to ECR
-#                 4. then start the image running on ECS
-# DAN 2.4 8pm:  The below is copilot generated but looks close to what i need re ECR
-#  - need to tag the image (docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest)
-#  - then push the image (docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest)
-#          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
-#
-# 🔎 AWS ENV Variables: https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings
-
-
-
+          
 # 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧
 #  DAN 2.5.25 4pm: the below MAY / MAY NOT be needed.  it is how to actually config creds for aws
 #      but i dont need to config them; i just need to pass them, right?
