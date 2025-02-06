@@ -51,12 +51,14 @@ jobs:
           aws-region: us-east-1
 
 
-# DANHERE 2.5.25 627pm: i think i need that ecr-login step here
 
-      - name: 4 Tag & Push the Image to ECR -------------------------
-        run: |
-          docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
-          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+      - name: 4 Tag the Image (never been sure why) -------------------------
+        run: docker tag aqua-server-1:latest 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+
+
+# DANHERE 2.5.25 627pm: i think i need that ecr-login step here
+      - name: 5 Push the Image to ECR -------------------------
+        run: docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
 
 
