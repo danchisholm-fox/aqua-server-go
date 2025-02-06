@@ -26,10 +26,14 @@ on:
 jobs:
   buildDahImage:
     runs-on: ubuntu-latest
+    env:
+      ECR_REGION = ${{ env.AWS_REGION }}
     steps:
       - uses: actions/checkout@v2
       - name: 1 Starting the Build'n'Push Process -------------------------
-        run: echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
+        run: |
+          echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
+          echo ecr region var is $ECR_REGION YUP
 
 
 #       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
@@ -45,7 +49,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: $ECR_REGION
 
 
 #  DANTODO 2.6: 
@@ -55,7 +59,10 @@ jobs:
 #    - 3 and instead have GHA start the container
 #    - 4 i need to check why the size that ECR shows the image being 100mb is so much smaller than locally 400mb (compressed?)
 #    - 5 get rid of the sleep value below and replace with an if conditional or needs or something
-#    - 6 upgrade my aws thing to v3 from v2
+#    - 6 fix this password warning
+#         WARNING! Your password will be stored unencrypted in /home/runner/.docker/config.json.
+#         Configure a credential helper to remove this warning. See
+#         https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 #
 # 🔎 FYI only: AWS ENV Variables: https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings
 
@@ -77,7 +84,8 @@ jobs:
 
       - name: 5 Push the Image to ECR -------------------------
         run: |
-          echo dwc region is ${{ env.AWS_REGION }} PERIOD
+          echo dwc aws region is ${{ env.AWS_REGION }} PERIOD
+          echo dwc and ecr_region is $ECR_REGION PERIOD
           echo dwc key is ${{ secrets.AWS_ACCESS_KEY_ID }} PERIOD
           echo dwc ACcouNT is ${{ env.AWS_ACCOUNT_ID }} PERIOD
           echo --- DOCKER IMAGES before PUSH ---
