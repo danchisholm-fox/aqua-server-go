@@ -91,13 +91,13 @@ jobs:
           
       - name: 6 Writing out some info re ECR, ECS, Container, --task
         run: |
-          echo ******* ECS List of Clusters ********
+          echo WWWWWWWWWWWW ECS List of Clusters WWWWWWWWWWWW
           aws ecs list-clusters
-          echo ******* ECS Describe Clusters ********
+          echo XXXXXXXXXXXXX ECS Describe Clusters XXXXXXXXXXXXX
           aws ecs describe-clusters
           echo TTTTTTTTTT ECS Container Info for Aqua - none bc i dont have EC2 runnin TTTTTTTTTT
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
-          echo +++++++++ ECS Task Definitions (better not be empty) +++++++++
+          echo "+++++++++ ECS Task Definitions (better not be empty) +++++++++"
           aws ecs list-task-definitions
           echo OOOOOOOOOOO ECS List Services (once its running there should be sumpin here) OOOOOOOOOOO
           aws ecs list-services --cluster aqua-ecs-cluster-name
