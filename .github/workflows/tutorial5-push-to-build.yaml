@@ -53,7 +53,7 @@ jobs:
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
         run: |
           docker images
-          docker tag aqua-server-1:latest 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           sleep 8
           docker images
           docker ps
@@ -75,11 +75,11 @@ jobs:
         run: |
           echo dwc region is ${{ env.AWS_REGION }} PERIOD
           echo dwc key is ${{ secrets.AWS_ACCESS_KEY_ID }} PERIOD
+          echo dwc ACcouNT is ${{ env.AWS_ACCOUNT_ID }} PERIOD
           echo --- DOCKER IMAGES before PUSH ---
           docker images
           echo -------------------- END --------------------------
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
-#          docker push aqua-server-1:latest
           
 
 
