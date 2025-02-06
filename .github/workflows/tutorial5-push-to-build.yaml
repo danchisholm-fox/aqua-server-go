@@ -17,9 +17,8 @@ name: 5 Build-Push-Run Image
 
 on: 
   workflow_dispatch:
-# DAN 2.4.539pm: commenting out just so i can manually run while i test
-#  push:
-#    branches: [ main ]
+  push:
+    branches: [ main ]
 #  pull_request:
 #    branches: [ main ]
 
