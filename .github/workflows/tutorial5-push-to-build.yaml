@@ -54,6 +54,7 @@ jobs:
         run: |
           docker images
           docker tag aqua-server-1:latest 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          sleep 8
           docker images
           docker ps
 
@@ -69,8 +70,8 @@ jobs:
       - name: 5 Push the Image to ECR -------------------------
         run: |
           docker images
-          docker push aqua-server-1:latest
-#          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+#          docker push aqua-server-1:latest
           
 
 
