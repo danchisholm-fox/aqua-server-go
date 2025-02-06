@@ -3,7 +3,6 @@
 ####### #####   ############  ##################
 #
 # ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
-# DANHERE 2.2 930pm: the 'deploy' command below works, now need to try 'build' then docker to ECR
 #
 # GOOD DOCS
 # Github Actions 'on' event types: https://docs.github.com/en/actions/reference/events-that-trigger-workflows
@@ -49,6 +48,18 @@ jobs:
           aws-region: us-east-1
 
 
+# # DANHERE 2.6 num1: i think i need that ecr-login step here
+#    account typo was fixed, now during 'docker push',  i see "no basic auth credentials"
+#      which is likely the ecr-login step
+#   see: https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+#
+#      aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
+####
+      - name: 3a. Login to ECR -------------------------
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
+          echo --------- completed ECR login ----------------
+
 
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
         run: |
@@ -60,17 +71,6 @@ jobs:
 
 
 
-# # DANHERE 2.5.25 627pm: i think i need that ecr-login step here
-# # oohh! i think it's because the previous step hasnt finished yet; so i need a 'depends-on' or 'needs' or something
-#
-#    714pm, hmm no  it isnt.  here's the msg,
-#       The push refers to repository [***.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name]
-#       An image does not exist locally with the tag: ***.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name
-#
-#       but there is indeed a repo with URI: 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name
-#         and this image exists: 35002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name
-#      IDEAS: maybe the tag name is wrong, or i'm including too much of the repo URI, or i should use the repo NAME not the URL
-#       🤔🤔🤔🤔🤔 it has to be either the tag name or the repo name
       - name: 5 Push the Image to ECR -------------------------
         run: |
           echo dwc region is ${{ env.AWS_REGION }} PERIOD
