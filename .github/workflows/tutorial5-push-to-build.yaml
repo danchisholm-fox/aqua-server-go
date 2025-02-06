@@ -89,13 +89,13 @@ jobs:
           echo -------------------- END --------------------------
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
-      - name: 6 Writig out some info re ECR, ECS, Container, --task
+      - name: 6 Writing out some info re ECR, ECS, Container, --task
         run: |
           echo ******* ECS List of Clusters ********
           aws ecs list-clusters
           echo ******* ECS Describe Clusters ********
           aws ecs describe-clusters
-          echo TTTTTTTTTT ECS Container Info for Aqua (none bc i dont have EC2 runnin) TTTTTTTTTT
+          echo TTTTTTTTTT ECS Container Info for Aqua - none bc i dont have EC2 runnin TTTTTTTTTT
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
           echo +++++++++ ECS Task Definitions (better not be empty) +++++++++
           aws ecs list-task-definitions
