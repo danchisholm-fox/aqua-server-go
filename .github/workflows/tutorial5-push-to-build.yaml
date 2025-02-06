@@ -60,14 +60,14 @@ jobs:
 
       - name: 3a. Login to ECR -------------------------
         run: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
           echo --------- completed ECR login ----------------
 
 
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
         run: |
           docker images
-          docker tag aqua-server-1:latest ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           sleep 8
           docker images
           docker ps
@@ -82,7 +82,7 @@ jobs:
           echo --- DOCKER IMAGES before PUSH ---
           docker images
           echo -------------------- END --------------------------
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
 
           
