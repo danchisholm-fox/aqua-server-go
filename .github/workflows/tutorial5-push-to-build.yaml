@@ -51,14 +51,18 @@ jobs:
           docker ps
           ls -al
           pwd
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
           docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
-          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
+          docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
+          
+
+# probably not need -           aws ecr get-login-password --region us-east-1
+# probably not needed           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
 
 #          docker tag aqua-blue5-container:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr:latest
-# 🔥🔥🔥🔥 DANHERE 🔥 2.4:  prior to doing the below *docker push*:
-#                 1. i need to get the keys from my AWS ECR 
-#                 2. log into ECR
+# 🔥🔥🔥🔥 DANHERE 🔥 2.5:  prior to doing the below *docker push*:
+#                 1. DONE - i need to get the keys from my AWS ECR 
+#                 2. DONE - log into ECR
+#                  2a.  WHY am i doing 'docker login' - what the heck is that; i dont need to log into docker
 #                 3. push the image to ECR
 #                 4. then start the image running on ECS
 # DAN 2.4 8pm:  The below is copilot generated but looks close to what i need re ECR
