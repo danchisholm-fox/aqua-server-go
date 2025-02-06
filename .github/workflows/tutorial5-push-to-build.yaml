@@ -64,8 +64,9 @@ jobs:
 
       - name: 3a. Login to ECR -------------------------
         run: |
+          echo "🔐🔐🔐🔐 aws ecr get-login-password blah blah 🔐🔐🔐🔐"
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
-          echo --------- completed ECR login ----------------
+          echo "🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐"
 
 
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
@@ -75,7 +76,7 @@ jobs:
           sleep 8
           docker images
           docker ps
-
+# DAN reminder remove the sleep call above
 
 
       - name: 5 Push the Image to ECR -------------------------
@@ -83,12 +84,12 @@ jobs:
           echo dwc region is ${{ env.AWS_REGION }} PERIOD
           echo dwc key is ${{ secrets.AWS_ACCESS_KEY_ID }} PERIOD
           echo dwc ACcouNT is ${{ env.AWS_ACCOUNT_ID }} PERIOD
-          echo --- DOCKER IMAGES before PUSH ---
+          echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 immediately before PUSH 🐳🐳🐳🐳🐳🐳"
           docker images
-          echo -------------------- END --------------------------
+          echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
-      - name: 6 Writing out some info re ECR, ECS, Container, --task
+      - name: 6 Info specificaly in AWS re ECR, ECS, Container, Tasks, Services
         run: |
           echo 
           echo "🟨🟨🟨🟨 aws ecs list-clusters 🟨🟨🟨🟨"
@@ -103,7 +104,7 @@ jobs:
           aws ecs list-services --cluster aqua-ecs-cluster-name
           echo "🟧🟧🟧🟧 aws ecs list-tasks --cluster aqua-ecs-cluster-name 🟧 Should always be empty since i'm using services not tasks 🟧🟧🟧🟧"
           aws ecs list-tasks --cluster aqua-ecs-cluster-name
-          echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬ DONE ⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
+          echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬ DONE ⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
 
 
 # # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
