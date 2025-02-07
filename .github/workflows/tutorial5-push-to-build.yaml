@@ -64,6 +64,7 @@ jobs:
 
       - name: 3a. Login to ECR -------------------------
         run: |
+          echo
           echo "🔐🔐🔐🔐 aws ecr get-login-password blah blah 🔐🔐🔐🔐"
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
           echo "🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐"
@@ -71,10 +72,14 @@ jobs:
 
       - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
         run: |
+          echo
+          echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 1st view 🐳🐳🐳🐳🐳🐳"
           docker images
           docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           sleep 8
+          echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 2nd view 🐳🐳🐳🐳🐳🐳"
           docker images
+          echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
           docker ps
 # DAN reminder remove the sleep call above
 
@@ -91,13 +96,16 @@ jobs:
           
       - name: 6 Info specificaly in AWS re ECR, ECS, Container, Tasks, Services
         run: |
-          echo 
+          echo
+          echo "🩱🩱🩱🩱🩱 aws EC2 describe-instances 🩱🩱🩱🩱🩱"
+          aws ec2 describe-instances
           echo "🟨🟨🟨🟨 aws ecs list-clusters 🟨🟨🟨🟨"
           aws ecs list-clusters
           echo "🟩🟩🟩🟩 aws ecs describe-clusters 🟩🟩🟩🟩"
           aws ecs describe-clusters
           echo "🎟️🎟️🎟️🎟️ aws ecs list-container-instances --cluster aqua-ecs-cluster-name 🎟️ empty for now since EC2 in TF is commented out 🎟️🎟️🎟️🎟️"
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
+          echo "🛑 ERROR - dan i should be seeing that ec2 instance from TF right above this"
           echo "💙💙💙💙 aws ecs list-task-definitions 💙 Should have the TF definition for Aqua 💙💙💙💙"
           aws ecs list-task-definitions
           echo "🟪🟪🟪🟪 aws ecs list-services --cluster aqua-ecs-cluster-name 🟪 Once running it should show aqua service 🟪🟪🟪🟪"
@@ -108,69 +116,80 @@ jobs:
 
 
 # # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
-# # 💄💄💄💄💄 DANHERE 2.6.25 11am: trying to run the image from GHA
-#       - name: 7 Run the Image -------------------------
-#         run: |
-#           aws ecs execute-command \
-#           --region us-east-1 \
-#           --cluster aqua-ecs-cluster-name \
-#           --task ECS_TASK_ID \
-#           --container aqua-server-da-container \
-#           --command "/bin/bash" \
-#           --interactive
+# # 💄💄💄💄💄 DANHERE 2.6.25 131pm: trying to run the image from GHA.  
+#    TO GET IT RUNNING:
+#      1 dont i need to create a container?  b/c there isnt one when GHA runs, 
+#            hrm, but there IS one in aws: aqua-server-da-container and it even references an ECR image
+#      2 i have to uncomment the EC2 instance in TF
+#      3 i need to use the aqua vpc settings i built in TF
+#      4 BTW! try running from local console, not GHA
+#      5 i need to switch to EC2 not FARGATE
+#      6 225pm: after re-adding EC2 in TF, i'm not seeing it associated with list-contianer-instances
+#
+#      A.minor: i may need to specific version number in task-definition
+#      # ECS CREATE SERVICE from AWS: https://docs.aws.amazon.com/cli/latest/reference/ecs/create-service.html
+#
+# DANHERE 2.6.25 306pm: alright! it indeed tried to start the service - but had a couple of failures.  
+# here's the msg in 💙💙 Amazon Elastic Container Service->Clusters->aqua-ecs-cluster-name->Services->aqua-ecs-soiviss->Events:
+#     💙  service aqua-ecs-soiviss was unable to place a task because no container instance met all of its requirements. 
+#     💙  Reason: No Container Instances were found in your cluster. For more information, see the Troubleshooting 
+#     💙  section of the Amazon ECS Developer Guide.
+#            Solution:  1 maybe i do need another TF resource called aws_ecs_cluster_capacity_providers instead of aws_instance
+#                       2 or just register-container-instance (i may need an ecs agent running on ec2) https://docs.aws.amazon.com/cli/latest/reference/ecs/register-container-instance.html
+#                       3 BUT!! i do have a container in the cluster, 💙 aqua-server-da-container 💙.  so why is it not finding it?
+#                             and dont i just need to associate the ec2 instance with that container??
+#  TMP BREAK - i'm gonna try launching using FARGATE before i try EC2.continue-on-error: 
+# and i got a 🍩 ROLE 🍩 error on Fargate (i suspect i will w/ ec2 also):
+#      💙💙   service aqua-ecs-soiviss failed to launch a task with (error ECS was unable to assume the role 
+#      💙💙   'arn:aws:iam::535002851677:role/aqua-ecs-role-736' that was provided for this task. Please verify 
+#      💙💙   that the role being passed has the proper trust relationship and permissions and that your IAM user 
+#      💙💙   has permissions to pass this role.).
+#    DAN 2.6 653pm: the role i'm using doesnt have a Principal, i commented it out
+#             also TODO - must add to my TF code a 'force_delete' for the container on ECS and also the image on ECR 
+#             also TODO- 🤨 🤨 must replace the subnet a securitygroup with variables because the IDs change each time i build in TF
+# DANHERE 2.6 751pm: i got the Role sorted out, but now have this error (its a timeout):
+#             ResourceInitializationError: unable to pull secrets or registry auth: The task cannot pull registry auth 
+#             from Amazon ECR: There is a connection issue between the task and Amazon ECR. Check your task network 
+#             configuration. RequestError: send request failed caused by: Post "https://api.ecr.us-east-1.amazonaws.com/": 
+#             dial tcp 44.213.79.86:443: i/o timeout
+      - name: 7 Run the Image -------------------------
+        run: |
+          echo
+          echo "💄💄💄💄💄💄💄💄 aws ecs execute-command 💄 Run the container 💄💄💄💄💄💄💄💄"
+          aws ecs create-service \
+            --cluster aqua-ecs-cluster-name \
+            --task-definition aqua-ecs-task-family \
+            --enable-execute-command \
+            --service-name aqua-ecs-soiviss \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[subnet-06eba3359ae8f6584],securityGroups=[sg-0e7c2c96d9a39090c],assignPublicIp=DISABLED}" \
+            --desired-count 1
+          echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
+
+
+# 2.6 108pm: actually why not do create service rather than execute-command
+#     docs here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html
+# aws ecs create-service \
+#     --cluster cluster-name \
+#     --task-definition task-definition-name \
+#     --enable-execute-command \
+#     --service-name service-name \
+#     --launch-type FARGATE \
+#      --network-configuration "awsvpcConfiguration={subnets=[subnet-12344321],securityGroups=[sg-12344321],assignPublicIp=ENABLED}" \
+#     --desired-count 1
+
+
+# 2.6 2pm awsvpc mode info
+#    from AWS: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters_ec2.html#network_mode_ec2
+#    from somone else: https://tutorialsdojo.com/ecs-network-modes-comparison/
 
 
 # 2.6 11am Reference from Google AI
-          # aws ecs execute-command \
+#          aws ecs execute-command --region us-east-1 --cluster aqua-ecs-cluster-name --task ECS_TASK_ID --container aqua-server-da-container --command "/bin/bash" --interactive
+#  or     # aws ecs execute-command \
           # --region us-east-1 \
           # --cluster ECS_CLUSTER_NAME \
           # --task ECS_TASK_ID \
           # --container CONTAINER_NAME \
           # --command "/bin/bash" \
           # --interactive
-
-          
-# 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧
-#  DAN 2.5.25 4pm: the below MAY / MAY NOT be needed.  it is how to actually config creds for aws
-#      but i dont need to config them; i just need to pass them, right?
-#
-# on:
-#   push:
-#     branches:
-#       - main
-#
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: ${{ secrets.AWS_REGION }}
-#
-#       - name: Get AWS secrets
-#         uses: aws-actions/aws-secretsmanager-get-secrets@v1
-#         with:
-#           secret-ids: |
-#             YOUR_KEY
-#           parse-json-secrets: true
-#
-#       - name: Print all Values
-# 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧
-
-
-# DANH 2.3 915pm: from NANA this may help me automate the build of the docker image
-#      https://youtu.be/R8_veQiYBjI?si=k3d_ArZs9gH0HKVn&t=1119
-#  
-#   steps:
-#     - uses: actions/checkout@v2
-#
-#     - name: do the docker image build
-#       uses: docker/build-push-action@v2
-#       # or maybe actions/somthin-for-docker-buildin (dwc)
-#
-#     - name: push the docker image to ECR
-#       uses: aws-actions/amazon-ecr-login@v2
-#
