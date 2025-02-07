@@ -32,6 +32,8 @@ jobs:
           echo
           echo "XXXXXXXX aight better see the ARN right below here XXXXXX"
           echo "${{ env.ecr_task_def }}"
+          echo "and yellow again"
+          echo "${{ env.action_state }}" # This will output 'yellow'
           echo "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
 
 #          echo "ecr_task_def=$(aws ecs list-task-definitions | grep arn)" >> $GITHUB_ENV
