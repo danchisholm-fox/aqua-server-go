@@ -54,6 +54,17 @@ jobs:
           echo "${{ env.meow }}" 
           echo "wow meow"
 
+      - name: taskdefwrite
+        id: step99
+        run: echo "ecrtaskdef=$(aws ecs list-task-definitions --region us-east-1 | grep arn)" >> $GITHUB_ENV
+        
+      - name: taskdefread
+        id: step100
+        run: |
+          echo "start task def ARN"
+          echo "${{ env.ecrtaskdef }}" 
+          echo "end task def ARN pirate"
+
 
 #          echo "ecr_task_def=$(aws ecs list-task-definitions | grep arn)" >> $GITHUB_ENV
 
