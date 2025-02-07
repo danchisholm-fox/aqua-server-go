@@ -24,6 +24,16 @@ jobs:
           echo "${{ env.action_state }}" # This will output 'yellow'
           echo "did i see YELLO above"
 
+      - name: DWC: set an ENV Var with the ARN of the Task Definition
+        id: dwc_step_fwee
+        run: |
+          echo
+          echo "ecr_task_def=$(aws ecs list-task-definitions | grep arn)" >> $GITHUB_ENV
+          echo
+          echo "XXXXXXXX aight better see the ARN right below here XXXXXX"
+          echo "${{ env.ecr_task_def }}
+          echo "TTTTTTTTTTTTTTTT"
+
         # run: |
         #   echo
         #   echo "🩱🩱🩱🩱🩱 aws EC2 describe-instances 🩱🩱🩱🩱🩱"
