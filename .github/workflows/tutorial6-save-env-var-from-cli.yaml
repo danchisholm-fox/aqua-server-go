@@ -28,7 +28,7 @@ jobs:
         id: dwc_step_fwee
         run: |
           echo
-          echo "ecr_task_def=$(ls -al | grep Docker)" >> $GITHUB_ENV
+          echo "ecr_task_def=$(pwd)" >> $GITHUB_ENV
           echo
           echo "XXXXXXXX aight better see the ARN right below here XXXXXX"
           echo "${{ env.ecr_task_def }}"
