@@ -12,6 +12,18 @@ jobs:
       - name: whatevs
         run: pwd
 
+      - name: Set the value
+        id: step_one
+        run: echo "action_state=yellow" >> $GITHUB_ENV
+
+      - name: Use the value
+        id: step_two
+        run: |
+          echo
+          echo "i betteh see YELLOW"
+          echo "${{ env.action_state }}" # This will output 'yellow'
+          echo "did i see YELLO above"
+
         # run: |
         #   echo
         #   echo "🩱🩱🩱🩱🩱 aws EC2 describe-instances 🩱🩱🩱🩱🩱"
