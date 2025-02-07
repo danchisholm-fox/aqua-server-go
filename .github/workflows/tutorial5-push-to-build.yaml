@@ -95,28 +95,18 @@ jobs:
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
 
-# DANHERE 2.7 2pm: adding these to get vars back from CLI for subnet, securitygroup, etc from TF to pass to the run image step below          
-      - name: meow seeeeeeeet
-        id: step7
-        run: echo "meow=$(pwd)" >> $GITHUB_ENV
-        
-      - name: meow reeeeeeeeeead
-        id: step8
-        run: |
-          echo "start meow"
-          echo "${{ env.meow }}" 
-          echo "wow meow"
-
-      - name: taskdefwriteeeeeeeeeeee
-        id: step99
+# DANHERE 2.7 212pm: adding these to get vars back from CLI for subnet, securitygroup, etc from TF to pass to the run image step below
+#    replace the below with grabbing the security group and subnet from TF          
+      - name: 5a Set up env variables from AWS to run image
+        id: ARN-temp-write
         run: echo "ecrtaskdef=$(aws ecs list-task-definitions --region us-east-1 | grep arn)" >> $GITHUB_ENV
         
-      - name: taskdefreeeeeeeeeeeead
-        id: step100
+      - name: 5b Print out var just to ensure
+        id: ARN-temp-readback
         run: |
-          echo "start task def ARN"
+          echo "🧵🧵🧵🧵🧵🧵 start task def ARN 🧵🧵🧵🧵🧵🧵"
           echo "${{ env.ecrtaskdef }}" 
-          echo "end task def ARN pirate"
+          echo "🧵🧵🧵🧵🧵🧵 end task def ARN pirate 🧵🧵🧵🧵🧵🧵"
 
 
 
