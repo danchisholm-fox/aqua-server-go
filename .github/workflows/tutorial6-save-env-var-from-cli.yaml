@@ -28,6 +28,11 @@ jobs:
         id: dwc_step_fwee
         run: |
           echo
+          echo boink
+          pwd
+          echo blip
+          echo "pwd is THIS $(pwd)"
+          echo blurp
           echo "ecr_task_def=$(pwd)" >> $GITHUB_ENV
           echo
           echo "XXXXXXXX aight better see the ARN right below here XXXXXX"
