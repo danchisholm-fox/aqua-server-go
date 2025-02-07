@@ -94,6 +94,32 @@ jobs:
           echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
+
+# DANHERE 2.7 2pm: adding these to get vars back from CLI for subnet, securitygroup, etc from TF to pass to the run image step below          
+      - name: meow seeeeeeeet
+        id: step7
+        run: echo "meow=$(pwd)" >> $GITHUB_ENV
+        
+      - name: meow reeeeeeeeeead
+        id: step8
+        run: |
+          echo "start meow"
+          echo "${{ env.meow }}" 
+          echo "wow meow"
+
+      - name: taskdefwriteeeeeeeeeeee
+        id: step99
+        run: echo "ecrtaskdef=$(aws ecs list-task-definitions --region us-east-1 | grep arn)" >> $GITHUB_ENV
+        
+      - name: taskdefreeeeeeeeeeeead
+        id: step100
+        run: |
+          echo "start task def ARN"
+          echo "${{ env.ecrtaskdef }}" 
+          echo "end task def ARN pirate"
+
+
+
       - name: 6 Info specificaly in AWS re ECR, ECS, Container, Tasks, Services
         run: |
           echo
