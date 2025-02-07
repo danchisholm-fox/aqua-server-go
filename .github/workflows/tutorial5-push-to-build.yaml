@@ -95,18 +95,35 @@ jobs:
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
 
-# DANHERE 2.7 212pm: adding these to get vars back from CLI for subnet, securitygroup, etc from TF to pass to the run image step below
-#    replace the below with grabbing the security group and subnet from TF          
+# DAN 2.7 212pm: adding these to get vars back from CLI for subnet, securitygroup, etc from TF to pass to the run image step below
+#    replace the below with grabbing the security group and subnet from TF      
+#  maybe aws ec2 describe-subnets --filters Name=vpc-id,Values=<vpc-id> --query 'Subnets[*].[SubnetId,NetworkAclAssociationId]'
+ #  maybe aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public  
+
+ # Warning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
       - name: 5a Set up env variables from AWS to run image
-        id: ARN-temp-write
-        run: echo "ecrtaskdef=$(aws ecs list-task-definitions --region us-east-1 | grep arn)" >> $GITHUB_ENV
+        id: aqua-subnet-step
+        run: echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId)" >> $GITHUB_ENV
         
-      - name: 5b Print out var just to ensure
-        id: ARN-temp-readback
+      - name: 5b Print out aqua subnet 58937
+        id: aqua-subnet-step-confirm
         run: |
-          echo "🧵🧵🧵🧵🧵🧵 start task def ARN 🧵🧵🧵🧵🧵🧵"
-          echo "${{ env.ecrtaskdef }}" 
-          echo "🧵🧵🧵🧵🧵🧵 end task def ARN pirate 🧵🧵🧵🧵🧵🧵"
+          echo "🧵🧵🧵🧵🧵🧵 Aqua Subnet ID 🧵🧵🧵🧵🧵🧵"
+          echo "${{ env.aqua_subnet }}" 
+          echo "🧵🧵🧵🧵🧵🧵 end Aqua Subnet ID 🧵🧵🧵🧵🧵🧵"
+
+# DANHERE 2.7 315pmWarning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
+      - name: 5c Set up env variables from AWS to run image
+        id: aqua-security-step
+        run: echo "aqua_security_group=$(aws ec2 describe-security-groups --filters Name=group-name,Values=aqua-security-group18 | grep GroupId)" >> $GITHUB_ENV
+        
+      - name: 5d Print out aqua subnet 58937
+        id: aqua-security-step-confirm
+        run: |
+          echo "👛👛👛👛👛👛👛 Aqua Security Group ID 👛👛👛👛👛👛👛"
+          echo "${{ env.aqua_security_group }}" 
+          echo "👛👛👛👛👛👛👛 end Aqua Sec Group ID 👛👛👛👛👛👛👛"
+
 
 
 
