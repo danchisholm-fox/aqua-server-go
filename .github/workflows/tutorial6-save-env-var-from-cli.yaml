@@ -32,14 +32,28 @@ jobs:
           pwd
           echo blip
           echo "pwd is THIS $(pwd)"
+          echo zingdong
+          echo "ecr_task_def=$(pwd)"
           echo blurp
           echo "ecr_task_def=$(pwd)" >> $GITHUB_ENV
-          echo
           echo "XXXXXXXX aight better see the ARN right below here XXXXXX"
           echo "${{ env.ecr_task_def }}"
           echo "and yellow again"
           echo "${{ env.action_state }}" # This will output 'yellow'
           echo "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
+
+
+      - name: meow set
+        id: step7
+        run: echo "meow=$(pwd)" >> $GITHUB_ENV
+        
+      - name: meow read
+        id: step8
+        run: |
+          echo "start meow"
+          echo "${{ env.meow }}" 
+          echo "wow meow"
+
 
 #          echo "ecr_task_def=$(aws ecs list-task-definitions | grep arn)" >> $GITHUB_ENV
 
