@@ -24,7 +24,7 @@ jobs:
           echo "${{ env.action_state }}" # This will output 'yellow'
           echo "did i see YELLO above"
 
-      - name: DWC: set an ENV Var with the ARN of the Task Definition
+      - name: DWC set an ENV Var with the ARN of the Task Definition
         id: dwc_step_fwee
         run: |
           echo
