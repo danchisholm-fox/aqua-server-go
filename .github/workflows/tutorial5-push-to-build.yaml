@@ -105,7 +105,6 @@ jobs:
           aws ecs describe-clusters
           echo "🎟️🎟️🎟️🎟️ aws ecs list-container-instances --cluster aqua-ecs-cluster-name 🎟️ empty for now since EC2 in TF is commented out 🎟️🎟️🎟️🎟️"
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
-          echo "🛑 ERROR - dan i should be seeing that ec2 instance from TF right above this"
           echo "💙💙💙💙 aws ecs list-task-definitions 💙 Should have the TF definition for Aqua 💙💙💙💙"
           aws ecs list-task-definitions
           echo "🟪🟪🟪🟪 aws ecs list-services --cluster aqua-ecs-cluster-name 🟪 Once running it should show aqua service 🟪🟪🟪🟪"

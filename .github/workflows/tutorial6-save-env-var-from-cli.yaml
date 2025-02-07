@@ -1,0 +1,22 @@
+###################################################
+name: 6 Temp workflow to test saving env var from CLI
+
+on: 
+  workflow_dispatch:
+
+
+jobs:
+  save-env-var-from-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - name: whatevs
+        run: pwd
+
+        # run: |
+        #   echo
+        #   echo "🩱🩱🩱🩱🩱 aws EC2 describe-instances 🩱🩱🩱🩱🩱"
+        #   aws ec2 describe-instances
+        #   echo "🟨🟨🟨🟨 aws ecs list-clusters 🟨🟨🟨🟨"
+        #   aws ecs list-clusters
+        #   echo "🟩🟩🟩🟩 aws ecs describe-clusters 🟩🟩🟩🟩"
+        #   aws ecs describe-clusters
