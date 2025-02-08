@@ -1,18 +1,16 @@
-###################################################
-# DAN 2.2 Setting up automatic deploy when pushing code
-####### #####   ############  ##################
-#
-# ref doc: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
+# 🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳
+# DAN started 2.2 Setting up automatic deploy when pushing code
+#  this was my first material use of GHA, and here on 2.7 i think it's almost done!
 #
 # GOOD DOCS
 # Github Actions 'on' event types: https://docs.github.com/en/actions/reference/events-that-trigger-workflows
 #   same doc? https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
-# Github Container Registry: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
-#     sheesh how many registries do i need - ECR, DockerHub, Github Container Registry
-###################################################
+#
+# 🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳
 
 
-###################################################
+
+
 name: 5 Build-Push-Run Image
 
 on: 
@@ -47,21 +45,12 @@ jobs:
           aws-region: us-east-1
 
 
-#  DANTODO 2.6: 
-#    - 1 i need to remove the hardcoded values like region and in the tag, and replace with variables
-#            which works fine if the vars have whitespaces on each side; but in strings i dont know the syntax yet
-#    - DONE - 2 then i need to remove the terraform resource to start up the ECS container because that isnt
-#      really infrastructure, 
-#    - 3 and instead have GHA start the container
-#    - 4 i need to check why the size that ECR shows the image being 100mb is so much smaller than locally 400mb (compressed?)
-#    - 5 get rid of the sleep value below and replace with an if conditional or needs or something
-#    - 6 fix this password warning
+# DANLATER i need to check why the size that ECR shows the image being 100mb is so much smaller than locally 400mb (compressed?)
+# DANLATER get rid of the sleep value below and replace with an if conditional or needs or something
+# DANLATER fix this password warning
 #         WARNING! Your password will be stored unencrypted in /home/runner/.docker/config.json.
 #         Configure a credential helper to remove this warning. See
 #         https://docs.docker.com/engine/reference/commandline/login/#credentials-store
-#
-# 🔎 FYI only: AWS ENV Variables: https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings
-
       - name: 3a. Login to ECR -------------------------
         run: |
           echo
@@ -94,12 +83,6 @@ jobs:
           echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
-
-# DAN 2.7 212pm: adding these to get vars back from CLI for subnet, securitygroup, etc from TF to pass to the run image step below
-#    replace the below with grabbing the security group and subnet from TF      
-#  maybe aws ec2 describe-subnets --filters Name=vpc-id,Values=<vpc-id> --query 'Subnets[*].[SubnetId,NetworkAclAssociationId]'
- #  maybe aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public  
-
  # Warning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
  # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
       - name: 5a Set up env variables from AWS to run image
@@ -149,38 +132,13 @@ jobs:
 
 
 # # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
-# # 💄💄💄💄💄 DANHERE 2.6.25 131pm: trying to run the image from GHA.  
-#    TO GET IT RUNNING:
-#      1 dont i need to create a container?  b/c there isnt one when GHA runs, 
-#            hrm, but there IS one in aws: aqua-server-da-container and it even references an ECR image
-#      2 i have to uncomment the EC2 instance in TF
-#      3 i need to use the aqua vpc settings i built in TF
-#      4 BTW! try running from local console, not GHA
-#      5 i need to switch to EC2 not FARGATE
-#      6 225pm: after re-adding EC2 in TF, i'm not seeing it associated with list-contianer-instances
+# DANLATER i need to switch to EC2 not FARGATE
+# DANLATER TODO - must add to my TF code a 'force_delete' for the container on ECS and also the image on ECR 
+# DANLATER - i have to delete all the images in ECR upon TF destroy
+# DANLATER - remove all the hardcoded values below and replace with vars
+# DANLATER -   better yet, follow rampals advice using data resources in TF to get the values
 #
-#      A.minor: i may need to specific version number in task-definition
-#      # ECS CREATE SERVICE from AWS: https://docs.aws.amazon.com/cli/latest/reference/ecs/create-service.html
-#
-# DANHERE 2.6.25 306pm: alright! it indeed tried to start the service - but had a couple of failures.  
-# here's the msg in 💙💙 Amazon Elastic Container Service->Clusters->aqua-ecs-cluster-name->Services->aqua-ecs-soiviss->Events:
-#     💙  service aqua-ecs-soiviss was unable to place a task because no container instance met all of its requirements. 
-#     💙  Reason: No Container Instances were found in your cluster. For more information, see the Troubleshooting 
-#     💙  section of the Amazon ECS Developer Guide.
-#            Solution:  1 maybe i do need another TF resource called aws_ecs_cluster_capacity_providers instead of aws_instance
-#                       2 or just register-container-instance (i may need an ecs agent running on ec2) https://docs.aws.amazon.com/cli/latest/reference/ecs/register-container-instance.html
-#                       3 BUT!! i do have a container in the cluster, 💙 aqua-server-da-container 💙.  so why is it not finding it?
-#                             and dont i just need to associate the ec2 instance with that container??
-#  TMP BREAK - i'm gonna try launching using FARGATE before i try EC2.continue-on-error: 
-# and i got a 🍩 ROLE 🍩 error on Fargate (i suspect i will w/ ec2 also):
-#      💙💙   service aqua-ecs-soiviss failed to launch a task with (error ECS was unable to assume the role 
-#      💙💙   'arn:aws:iam::535002851677:role/aqua-ecs-role-736' that was provided for this task. Please verify 
-#      💙💙   that the role being passed has the proper trust relationship and permissions and that your IAM user 
-#      💙💙   has permissions to pass this role.).
-#    DAN 2.6 653pm: the role i'm using doesnt have a Principal, i commented it out
-#             also TODO - must add to my TF code a 'force_delete' for the container on ECS and also the image on ECR 
-#             also TODO- 🤨 🤨 must replace the subnet a securitygroup with variables because the IDs change each time i build in TF
-# DANHERE 2.6 751pm: i got the Role sorted out, but now have this error (its a timeout):
+# DANHERE 2.7 458pm: i need to investigate the networking, i dont think ECS can access ECR
 #             ResourceInitializationError: unable to pull secrets or registry auth: The task cannot pull registry auth 
 #             from Amazon ECR: There is a connection issue between the task and Amazon ECR. Check your task network 
 #             configuration. RequestError: send request failed caused by: Post "https://api.ecr.us-east-1.amazonaws.com/": 
@@ -191,8 +149,8 @@ jobs:
           ECR_SUBNET: ${{ env.aqua_subnet}}
         run: |
           echo
-          echo "my secccy gwoup $ECR_SEC_GROUP <<"
-          echo "and my subbbb $ECR_SUBNET <<"
+          echo "ECR SECURITY GROUP >> $ECR_SEC_GROUP <<"
+          echo "ECR SUBNET $ECR_SUBNET <<"
           echo "💄💄💄💄💄💄💄💄 aws ecs execute-command 💄 Run the container 💄💄💄💄💄💄💄💄"
           aws ecs create-service \
             --cluster aqua-ecs-cluster-name \
@@ -203,35 +161,3 @@ jobs:
             --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=DISABLED}" \
             --desired-count 1
           echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
-
-# DANHERE 2.7 428pm: i need to now just drop these env vars in for security group and subnet in the string above.... not sure how to syntaically yet
-#            --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=DISABLED}" \
-
-
-
-# 2.6 108pm: actually why not do create service rather than execute-command
-#     docs here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html
-# aws ecs create-service \
-#     --cluster cluster-name \
-#     --task-definition task-definition-name \
-#     --enable-execute-command \
-#     --service-name service-name \
-#     --launch-type FARGATE \
-#      --network-configuration "awsvpcConfiguration={subnets=[subnet-12344321],securityGroups=[sg-12344321],assignPublicIp=ENABLED}" \
-#     --desired-count 1
-
-
-# 2.6 2pm awsvpc mode info
-#    from AWS: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters_ec2.html#network_mode_ec2
-#    from somone else: https://tutorialsdojo.com/ecs-network-modes-comparison/
-
-
-# 2.6 11am Reference from Google AI
-#          aws ecs execute-command --region us-east-1 --cluster aqua-ecs-cluster-name --task ECS_TASK_ID --container aqua-server-da-container --command "/bin/bash" --interactive
-#  or     # aws ecs execute-command \
-          # --region us-east-1 \
-          # --cluster ECS_CLUSTER_NAME \
-          # --task ECS_TASK_ID \
-          # --container CONTAINER_NAME \
-          # --command "/bin/bash" \
-          # --interactive
