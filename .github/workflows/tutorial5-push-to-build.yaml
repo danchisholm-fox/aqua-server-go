@@ -186,8 +186,13 @@ jobs:
 #             configuration. RequestError: send request failed caused by: Post "https://api.ecr.us-east-1.amazonaws.com/": 
 #             dial tcp 44.213.79.86:443: i/o timeout
       - name: 7 Run the Image -------------------------
+        env: 
+          ECR_SEC_GROUP: ${{ env.aqua_security_group}}
+          ECR_SUBNET: ${{ env.aqua_subnet}}
         run: |
           echo
+          echo "my secccy gwoup $ECR_SEC_GROUP <<"
+          echo "and my subbbb $ECR_SUBNET <<"
           echo "💄💄💄💄💄💄💄💄 aws ecs execute-command 💄 Run the container 💄💄💄💄💄💄💄💄"
           aws ecs create-service \
             --cluster aqua-ecs-cluster-name \
@@ -195,9 +200,13 @@ jobs:
             --enable-execute-command \
             --service-name aqua-ecs-soiviss \
             --launch-type FARGATE \
-            --network-configuration "awsvpcConfiguration={subnets=[subnet-06eba3359ae8f6584],securityGroups=[sg-0e7c2c96d9a39090c],assignPublicIp=DISABLED}" \
+            --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=DISABLED}" \
             --desired-count 1
           echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
+
+# DANHERE 2.7 428pm: i need to now just drop these env vars in for security group and subnet in the string above.... not sure how to syntaically yet
+#            --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=DISABLED}" \
+
 
 
 # 2.6 108pm: actually why not do create service rather than execute-command
