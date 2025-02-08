@@ -137,12 +137,19 @@ jobs:
 # DANLATER - i have to delete all the images in ECR upon TF destroy
 # DANLATER - remove all the hardcoded values below and replace with vars
 # DANLATER -   better yet, follow rampals advice using data resources in TF to get the values
+# DANTODO - TF destroy needs to delete the ECS service and the ECR image
 #
-# DANHERE 2.7 458pm: i need to investigate the networking, i dont think ECS can access ECR
+# DANHERE 2.7 822pm: i need to investigate the networking, i dont think ECS can access ECR
 #             ResourceInitializationError: unable to pull secrets or registry auth: The task cannot pull registry auth 
 #             from Amazon ECR: There is a connection issue between the task and Amazon ECR. Check your task network 
 #             configuration. RequestError: send request failed caused by: Post "https://api.ecr.us-east-1.amazonaws.com/": 
 #             dial tcp 44.213.79.86:443: i/o timeout
+#     Security Group not configged: https://docs.aws.amazon.com/eks/latest/best-practices/sgpp.html
+#         1. i'm pretty sure i have to put the ECS Task (ie what starts the service in a subnet so it can have a public IP)
+#               see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-task-networking.html
+#         2. or maybe it's because the VPC->Subnet->Network ACL has a 0.0.0.0/0 DENY rule . nope b/c its a "*" rule
+#         3. and i confirmed the subnet is PUBLIC (which just means it has a route table with a route to IGW, which it does)
+
       - name: 7 Run the Image -------------------------
         env: 
           ECR_SEC_GROUP: ${{ env.aqua_security_group}}
@@ -158,6 +165,7 @@ jobs:
             --enable-execute-command \
             --service-name aqua-ecs-soiviss \
             --launch-type FARGATE \
-            --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=DISABLED}" \
+            --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=ENABLED}" \
             --desired-count 1
           echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
+# DAN 2.7: on network-configuration, i have to assign a public ip to the task (not sure about a route table), otherwise set up a VPC endpoint for ECR
