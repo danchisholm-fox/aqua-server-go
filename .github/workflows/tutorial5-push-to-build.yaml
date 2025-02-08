@@ -101,9 +101,10 @@ jobs:
  #  maybe aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public  
 
  # Warning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
+ # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
       - name: 5a Set up env variables from AWS to run image
         id: aqua-subnet-step
-        run: echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId)" >> $GITHUB_ENV
+        run: echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
         
       - name: 5b Print out aqua subnet 58937
         id: aqua-subnet-step-confirm
@@ -112,10 +113,10 @@ jobs:
           echo "${{ env.aqua_subnet }}" 
           echo "🧵🧵🧵🧵🧵🧵 end Aqua Subnet ID 🧵🧵🧵🧵🧵🧵"
 
-# DANHERE 2.7 315pmWarning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
+# DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
       - name: 5c Set up env variables from AWS to run image
         id: aqua-security-step
-        run: echo "aqua_security_group=$(aws ec2 describe-security-groups --filters Name=group-name,Values=aqua-security-group18 | grep GroupId)" >> $GITHUB_ENV
+        run: echo "aqua_security_group=$(aws ec2 describe-security-groups --filters Name=group-name,Values=aqua-security-group18 | grep GroupId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
         
       - name: 5d Print out aqua subnet 58937
         id: aqua-security-step-confirm
