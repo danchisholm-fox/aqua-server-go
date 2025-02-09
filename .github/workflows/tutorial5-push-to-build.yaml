@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: 1 Starting the Build'n'Push Process
+      - name: 1 Doing Checkout which i forgot what this is
         run: echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
 
 
@@ -59,7 +59,14 @@ jobs:
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
 
 
-      - name: 5 Tag the Image before Uploading
+      - name: 5 Delete any previous services running
+        run: |
+          echo
+          echo "XXXXXXXX aws ecs delete-service blah blah XXXXXX"
+          aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --service aqua-ecs-soiviss
+  
+
+      - name: 6 Tag the Image before Uploading
         run: |
           echo
           echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳 Docker images 🐳 1st view 🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
@@ -70,20 +77,20 @@ jobs:
  # DAN reminder remove the sleep call above
 
 
-      - name: 6 Push Image to ECR
+      - name: 7 Push Image to ECR
         run: |
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
  # Warning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
  # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
-      - name: 7 Set Subnet variable
+      - name: 8 Set Subnet variable
         id: aqua-subnet-step
         run: |
           echo "DANTODO: replace this awful SUBNET greg/regex with a data resource in TF"
           echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
 
 # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
-      - name: 8 Set Security Group variable
+      - name: 9 Set Security Group variable
         id: aqua-security-step
         run: |
           echo "DANTODO 2.9.25: replace this SEC-GROUP greg/regex with a data resource in TF"
@@ -101,7 +108,7 @@ jobs:
 #
 #  DANTODO: i should check if a service is already running and skip this if so (so i dont get that idempotent error)
 
-      - name: 9 Create the Service, ie Run the Image 
+      - name: 10 Create the Service, ie Run the Image 
         env: 
           ECR_SEC_GROUP: ${{ env.aqua_security_group}}
           ECR_SUBNET: ${{ env.aqua_subnet}}
@@ -123,8 +130,8 @@ jobs:
 
 # Get variables to determine IP of the service
 # DANHERE 2.9 1239pm: replace these sleeps with some kind of while == NULL loop
-      - name: 10 Get Task Arn
-        id: varsstuff-872527
+      - name: 11 Get Task Arn
+        id: get-task-arn
         run: |
           echo
           echo "DANTODO: sleeping 60 secs this could cause an Error if i dont give enough time for the variable to be created"
@@ -134,25 +141,17 @@ jobs:
           echo "Task Arn Env Var >> ${{ env.aqua_task_arn }} << (probably empty?)" 
 
 
-      - name: 10a Confirming Task Arn
-        run: |
-          echo 
-          echo "TRY TRY Aagin"
-          echo " Task Arn >> ${{ env.aqua_task_arn }} << (probably not empty... its somthing about going to next step)" 
-
-
-      - name: 11 Get Network Interface Variable 
+      - name: 12 Confirm Task ARN
         env: 
           TASK_ARN: ${{ env.aqua_task_arn}}
         run: |
           echo
+          echo "Task Arn >> ${{ env.aqua_task_arn }} << (probably not empty... its somthing about going to next step)" 
           echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks $TASK_ARN | grep -o 'eni-[^"]*')" >> $GITHUB_ENV
-          echo "sleeping 6 to allow ENI to get created"
-          echo " ok is the ENI here >>${{ env.aqua_eni }} <<"
 
           
 
-      - name: 12 Get the IP Address
+      - name: 13 Confirm Network Interface ID
         env: 
           AQUA_ENI_YUP: ${{ env.aqua_eni }}
         run: |
@@ -163,12 +162,12 @@ jobs:
           
 
 
-      - name: 13 Show the Resulting URL
+      - name: 14 Show the Resulting IP Address
         env: 
           WEBSITE_IP: ${{ env.aqua_public_ip }}
         run: |
           echo
-          echo "✅✅✅✅✅✅✅ Visit web server at http://$WEBSITE_IP:8072 ✅✅✅✅✅✅✅"
+          echo "✅✅✅✅✅✅✅ Aqua server is now live.  Go to http://$WEBSITE_IP:8072 ✅✅✅✅✅✅✅"
 
     
               
