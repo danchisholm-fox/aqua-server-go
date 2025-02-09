@@ -65,7 +65,7 @@ jobs:
           echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 1st view 🐳🐳🐳🐳🐳🐳"
           docker images
           docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
-          sleep 8
+          sleep 4
           echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 2nd view 🐳🐳🐳🐳🐳🐳"
           docker images
           echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
@@ -87,7 +87,9 @@ jobs:
  # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
       - name: 5a Set up env variables from AWS to run image
         id: aqua-subnet-step
-        run: echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
+        run: |
+          echo "DANTODO: replace this awful SUBNET greg/regex with a data resource in TF"
+          echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
         
       - name: 5b Print out aqua subnet 58937
         id: aqua-subnet-step-confirm
@@ -99,7 +101,9 @@ jobs:
 # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
       - name: 5c Set up env variables from AWS to run image
         id: aqua-security-step
-        run: echo "aqua_security_group=$(aws ec2 describe-security-groups --filters Name=group-name,Values=aqua-security-group18 | grep GroupId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
+        run: |
+          echo "DANTODO 2.9.25: replace this SEC-GROUP greg/regex with a data resource in TF"
+          echo "aqua_security_group=$(aws ec2 describe-security-groups --filters Name=group-name,Values=aqua-security-group18 | grep GroupId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
         
       - name: 5d Print out aqua subnet 58937
         id: aqua-security-step-confirm
@@ -118,16 +122,16 @@ jobs:
           aws ec2 describe-instances
           echo "🟨🟨🟨🟨 aws ecs list-clusters 🟨🟨🟨🟨"
           aws ecs list-clusters
-          echo "🟩🟩🟩🟩 aws ecs describe-clusters 🟩🟩🟩🟩"
-          aws ecs describe-clusters
-          echo "🎟️🎟️🎟️🎟️ aws ecs list-container-instances --cluster aqua-ecs-cluster-name 🎟️ empty for now since EC2 in TF is commented out 🎟️🎟️🎟️🎟️"
+          echo "🟩🟩🟩🟩 aws ecs describe-clusters (reminder: must explicitly pass cluster name) 🟩🟩🟩🟩"
+          aws ecs describe-clusters --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name
+          echo "🎟️🎟️🎟️🎟️ aws ecs list-container-instances --cluster aqua-ecs-cluster-name 🎟️ empty for now since Fargate is not exposed here (will see when i go to EC2) 🎟️🎟️🎟️🎟️"
           aws ecs list-container-instances --cluster aqua-ecs-cluster-name
           echo "💙💙💙💙 aws ecs list-task-definitions 💙 Should have the TF definition for Aqua 💙💙💙💙"
           aws ecs list-task-definitions
           echo "🟪🟪🟪🟪 aws ecs list-services --cluster aqua-ecs-cluster-name 🟪 Once running it should show aqua service 🟪🟪🟪🟪"
           aws ecs list-services --cluster aqua-ecs-cluster-name
-          echo "🟧🟧🟧🟧 aws ecs list-tasks --cluster aqua-ecs-cluster-name 🟧 Should always be empty since i'm using services not tasks 🟧🟧🟧🟧"
-          aws ecs list-tasks --cluster aqua-ecs-cluster-name
+          echo "🟧🟧🟧🟧 aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name 🟧🟧🟧🟧"
+          aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name
           echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬ DONE ⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
 
 
@@ -158,7 +162,7 @@ jobs:
           echo
           echo "ECR SECURITY GROUP >> $ECR_SEC_GROUP <<"
           echo "ECR SUBNET $ECR_SUBNET <<"
-          echo "💄💄💄💄💄💄💄💄 aws ecs execute-command 💄 Run the container 💄💄💄💄💄💄💄💄"
+          echo "💄💄💄💄💄💄💄💄 aws ecs create-service 💄 Run the container 💄💄💄💄💄💄💄💄"
           aws ecs create-service \
             --cluster aqua-ecs-cluster-name \
             --task-definition aqua-ecs-task-family \
@@ -168,4 +172,12 @@ jobs:
             --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=ENABLED}" \
             --desired-count 1
           echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
-# DAN 2.7: on network-configuration, i have to assign a public ip to the task (not sure about a route table), otherwise set up a VPC endpoint for ECR
+
+# DANHERE 2.9 731am: i want to see public ip listed out
+#  so describe the task or fargat or something to see that IP
+# i should probably add 'aws ecs wait' here to ensure its created
+      - name: 8 How to Publicly Access -------------------------
+        run: |
+          echo
+          echo "Check Cluster Name->Tasks->Networking->Public IP"
+          echo " uh or Network Interfaces....its complicated"
