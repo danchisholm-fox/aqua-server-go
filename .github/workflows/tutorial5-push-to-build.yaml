@@ -193,7 +193,9 @@ jobs:
         run: |
           echo
           echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks arn:aws:ecs:us-east-1:535002851677:task/aqua-ecs-cluster-name/97fc65156c0a40eab0105f500d400fe3 | grep -o 'eni-[^"]*')" >> $GITHUB_ENV
-          echo "${{ env.aqua_eni }}"
+          echo "sleeping to allow eni to get created"
+          sleep 30
+          echo " ok is the ENI here >>${{ env.aqua_eni }} <<"
 
           
 
@@ -202,6 +204,7 @@ jobs:
           AQUA_ENI_YUP: ${{ env.aqua_eni }}
         run: |
           echo
+          echo "AQUA ENI: $AQUA_ENI_YUP OOOOOOO"
           echo "aqua_public_ip=$(aws ec2 describe-network-interfaces --network-interface-ids $AQUA_ENI_YUP | grep PublicIp | head -n 1)" >> $GITHUB_ENV
           echo "${{ env.aqua_public_ip }}"
           
