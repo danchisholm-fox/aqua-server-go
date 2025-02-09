@@ -154,7 +154,7 @@ jobs:
 #         2. or maybe it's because the VPC->Subnet->Network ACL has a 0.0.0.0/0 DENY rule . nope b/c its a "*" rule
 #         3. and i confirmed the subnet is PUBLIC (which just means it has a route table with a route to IGW, which it does)
 
-      - name: 7 Run the Image -------------------------
+      - name: 7 Create the Service, ie Run the Image -------------------------
         env: 
           ECR_SEC_GROUP: ${{ env.aqua_security_group}}
           ECR_SUBNET: ${{ env.aqua_subnet}}
@@ -173,11 +173,28 @@ jobs:
             --desired-count 1
           echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
 
-# DANHERE 2.9 731am: i want to see public ip listed out
-#  so describe the task or fargat or something to see that IP
-# i should probably add 'aws ecs wait' here to ensure its created
-      - name: 8 How to Publicly Access -------------------------
+
+# Get variables to determine IP of the service
+      - name: 8 grab vars 872527
+        id: varsstuff-872527
+        run: |
+          echo "get the task arn"
+          echo "aqua_task_arn=$(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep :task | sed 's/[[:space:]]//g' | sed 's/"//g')" >> $GITHUB_ENV
+
+
+
+      - name: 9 Get ENI -------------------------
+        env: 
+          TASK_ARN: ${{ env.aqua_task_arn}}
         run: |
           echo
-          echo "Check Cluster Name->Tasks->Networking->Public IP"
-          echo " uh or Network Interfaces....its complicated"
+          echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks $TASK_ARN | grep eni | grep -o 'eni-[^"]*)" >> $GITHUB_ENV
+
+
+      - name: 10 finally get the ip -------------------------
+        env: 
+          AQUA_ENI_YUP: ${{ env.aqua_eni}}
+        run: |
+          echo
+          echo "aqua_public_ip=$(aws ec2 describe-network-interfaces --network-interface-ids $AQUA_ENI_YUP | grep PublicIp)" >> $GITHUB_ENV
+          echo "🌺🌺🌺🌺 IN BROWSER go here $(aws ec2 describe-network-interfaces --network-interface-ids $AQUA_ENI_YUP | grep PublicIp  | head -n 1)"    
