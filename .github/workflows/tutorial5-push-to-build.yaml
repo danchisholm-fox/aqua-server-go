@@ -30,8 +30,7 @@ jobs:
 
 
 
-
-      - name: 3 Authenticate GHA with AWS
+      - name: 2 Authenticate GHA with AWS
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -45,7 +44,7 @@ jobs:
 #         WARNING! Your password will be stored unencrypted in /home/runner/.docker/config.json.
 #         Configure a credential helper to remove this warning. See
 #         https://docs.docker.com/engine/reference/commandline/login/#credentials-store
-      - name: 4 Log into ECR
+      - name: 3 Log into ECR
         run: |
           echo
           echo "🔐🔐🔐🔐 aws ecr get-login-password blah blah 🔐🔐🔐🔐"
@@ -53,20 +52,19 @@ jobs:
 
 
 
-      - name: 5 Delete any previous services running
+      - name: 4 Delete any previous services running
         env: 
           SERVICE_REGION: ${{ env.AWS_REGION }}
         run: |
           echo
-          echo danno
-          echo ${{ env.AWS_REGION }}
+          echo "Env region is >> ${{ env.AWS_REGION }} <<"
           echo "XXXXXXXX aws ecs delete-service blah blah  XXXXXX"
           aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region us-east-1 --service aqua-ecs-soiviss --force
     
   
 
 #       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
-      - name: 22222222 Build the Docker Image
+      - name: 2 Build the Docker Image
         run: |
           docker build -t aqua-server-1 ../aqua-server-go
           echo "====================================="
