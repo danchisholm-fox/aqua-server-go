@@ -35,8 +35,10 @@ jobs:
           SERVICE_REGION: ${{ env.AWS_REGION }}
         run: |
           echo
-          echo "XXXXXXXX aws ecs delete-service blah blah from $SERVICE_REGION XXXXXX"
-          aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region $SERVICE_REGION --service aqua-ecs-soiviss --force
+          echo danno
+          echo ${{ env.AWS_REGION }}
+          echo "XXXXXXXX aws ecs delete-service blah blah  XXXXXX"
+          aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region us-east-1 --service aqua-ecs-soiviss --force
   
 
 
