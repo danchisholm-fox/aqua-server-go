@@ -128,7 +128,6 @@ jobs:
         run: |
           echo
           echo "DANTODO: sleeping 75 this could cause an Error if i dont give enough time for the variable to be created"
-          sleep 75
           echo "get the task arn"
           echo "aqua_task_arn=$(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep :task | sed 's/[[:space:]]//g' | sed 's/"//g')" >> $GITHUB_ENV
           echo "Task Arn Env Var >> ${{ env.aqua_task_arn }} << (probably empty?)" 
@@ -148,7 +147,6 @@ jobs:
           echo
           echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks $TASK_ARN | grep -o 'eni-[^"]*')" >> $GITHUB_ENV
           echo "sleeping 6 to allow ENI to get created"
-          sleep 6
           echo " ok is the ENI here >>${{ env.aqua_eni }} <<"
 
           
