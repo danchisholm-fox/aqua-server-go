@@ -171,8 +171,8 @@ jobs:
         id: varsstuff-872527
         run: |
           echo
-          echo sleeping 150
-          sleep 210
+          echo "sleeping 90 this could cause an Error if i dont give enough time for the variable to be created"
+          sleep 90
           echo "get the task arn"
           echo "aqua_task_arn=$(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep :task | sed 's/[[:space:]]//g' | sed 's/"//g')" >> $GITHUB_ENV
           echo "${{ env.aqua_task_arn }}" 
@@ -192,9 +192,9 @@ jobs:
           TASK_ARN: ${{ env.aqua_task_arn}}
         run: |
           echo
-          echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks arn:aws:ecs:us-east-1:535002851677:task/aqua-ecs-cluster-name/97fc65156c0a40eab0105f500d400fe3 | grep -o 'eni-[^"]*')" >> $GITHUB_ENV
+          echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks $TASK_ARN | grep -o 'eni-[^"]*')" >> $GITHUB_ENV
           echo "sleeping to allow eni to get created"
-          sleep 30
+          sleep 15
           echo " ok is the ENI here >>${{ env.aqua_eni }} <<"
 
           
@@ -210,12 +210,12 @@ jobs:
           
 
 
-      - name: 9 Get ENI -------------------------
+      - name: 11 show me da IP -------------------------
         env: 
           WEBSITE_IP: ${{ env.aqua_public_ip }}
         run: |
           echo
-          echo "🍤🍤🍤🍤🍤 🍤🍤🍤 go to $WEBSITE_IP"
+          echo "🍤🍤🍤🍤🍤🍤🍤🍤 go to $WEBSITE_IP 🍤🍤🍤🍤🍤🍤"
 
     
               
