@@ -216,6 +216,7 @@ jobs:
         run: |
           echo
           echo "🍤🍤🍤🍤🍤🍤🍤🍤 go to $WEBSITE_IP 🍤🍤🍤🍤🍤🍤"
+          echo "✅✅✅✅✅✅✅ Visit web server at http://$WEBSITE_IP:8072 ✅✅✅✅✅✅✅"
 
     
               
