@@ -172,7 +172,6 @@ jobs:
         run: |
           echo
           echo sleeping 210
-          sleep 210
           echo "get the task arn"
           echo "aqua_task_arn=$(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep arn:aws)" >> $GITHUB_ENV
           echo "${{ env.aqua_task_arn }}" 
