@@ -52,6 +52,7 @@ jobs:
 
 
 
+# DANTODO 2.9: i must replace this sleep - because it creates race condition if the old service is still draining before the later create-service gets called
       - name: 4 Delete any previous services running
         env: 
           SERVICE_REGION: ${{ env.AWS_REGION }}
@@ -60,7 +61,7 @@ jobs:
           echo "Env region is >> ${{ env.AWS_REGION }} <<"
           echo "XXXXXXXX aws ecs delete-service blah blah  XXXXXX"
           aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region us-east-1 --service aqua-ecs-soiviss --force
-    
+          sleep 15
   
 
 #       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
