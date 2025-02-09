@@ -25,19 +25,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: 1 Starting the Build'n'Push Process -------------------------
+      - name: 1 Starting the Build'n'Push Process
         run: echo "Starting up Checkout and the process in the ${{ github.event.inputs.environment }} env"
 
 
 #       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
-      - name: 2 Build the Docker Image -------------------------
+      - name: 2 Build the Docker Image
         run: |
           docker build -t aqua-server-1 ../aqua-server-go
+          echo "====================================="
           ls -al
           pwd
 
 
-      - name: 3 Authenticate GHA with AWS -------------------------
+      - name: 3 Authenticate GHA with AWS
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -51,88 +52,43 @@ jobs:
 #         WARNING! Your password will be stored unencrypted in /home/runner/.docker/config.json.
 #         Configure a credential helper to remove this warning. See
 #         https://docs.docker.com/engine/reference/commandline/login/#credentials-store
-      - name: 3a. Login to ECR -------------------------
+      - name: 4 Log into ECR
         run: |
           echo
           echo "🔐🔐🔐🔐 aws ecr get-login-password blah blah 🔐🔐🔐🔐"
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
-          echo "🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐"
 
 
-      - name: 4 Tag the Image (never been sure why) and then list the images that exist -------------------------
+      - name: 5 Tag the Image before Uploading
         run: |
           echo
-          echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 1st view 🐳🐳🐳🐳🐳🐳"
-          docker images
+          echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳 Docker images 🐳 1st view 🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
           docker tag aqua-server-1:latest 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           sleep 4
-          echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 2nd view 🐳🐳🐳🐳🐳🐳"
           docker images
           echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
-          docker ps
-# DAN reminder remove the sleep call above
+ # DAN reminder remove the sleep call above
 
 
-      - name: 5 Push the Image to ECR -------------------------
+      - name: 6 Push Image to ECR
         run: |
-          echo dwc region is ${{ env.AWS_REGION }} PERIOD
-          echo dwc key is ${{ secrets.AWS_ACCESS_KEY_ID }} PERIOD
-          echo dwc ACcouNT is ${{ env.AWS_ACCOUNT_ID }} PERIOD
-          echo "🐳🐳🐳🐳🐳🐳 docker images 🐳 immediately before PUSH 🐳🐳🐳🐳🐳🐳"
-          docker images
-          echo "🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳"
           docker push 535002851677.dkr.ecr.us-east-1.amazonaws.com/aqua/aqua-ecr-repo-name:latest
           
  # Warning - if i ever change the tagging of 'aqua-subnet-public' in TF, this will break
  # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
-      - name: 5a Set up env variables from AWS to run image
+      - name: 7 Set Subnet variable
         id: aqua-subnet-step
         run: |
           echo "DANTODO: replace this awful SUBNET greg/regex with a data resource in TF"
           echo "aqua_subnet=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=aqua-subnet-public | grep SubnetId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
-        
-      - name: 5b Print out aqua subnet 58937
-        id: aqua-subnet-step-confirm
-        run: |
-          echo "🧵🧵🧵🧵🧵🧵 Aqua Subnet ID 🧵🧵🧵🧵🧵🧵"
-          echo "${{ env.aqua_subnet }}" 
-          echo "🧵🧵🧵🧵🧵🧵 end Aqua Subnet ID 🧵🧵🧵🧵🧵🧵"
 
 # DANTODO 2.7: replace these hardcoded values with env variables, and ideally the vars that i defined in tfvars
-      - name: 5c Set up env variables from AWS to run image
+      - name: 8 Set Security Group variable
         id: aqua-security-step
         run: |
           echo "DANTODO 2.9.25: replace this SEC-GROUP greg/regex with a data resource in TF"
           echo "aqua_security_group=$(aws ec2 describe-security-groups --filters Name=group-name,Values=aqua-security-group18 | grep GroupId | tr -d '",' | xargs | cut -d' ' -f2)" >> $GITHUB_ENV
-        
-      - name: 5d Print out aqua subnet 58937
-        id: aqua-security-step-confirm
-        run: |
-          echo "👛👛👛👛👛👛👛 Aqua Security Group ID 👛👛👛👛👛👛👛"
-          echo "${{ env.aqua_security_group }}" 
-          echo "👛👛👛👛👛👛👛 end Aqua Sec Group ID 👛👛👛👛👛👛👛"
 
-
-
-
-      - name: 6 Info specificaly in AWS re ECR, ECS, Container, Tasks, Services
-        run: |
-          echo
-          echo "🩱🩱🩱🩱🩱 aws EC2 describe-instances 🩱🩱🩱🩱🩱"
-          aws ec2 describe-instances
-          echo "🟨🟨🟨🟨 aws ecs list-clusters 🟨🟨🟨🟨"
-          aws ecs list-clusters
-          echo "🟩🟩🟩🟩 aws ecs describe-clusters (reminder: must explicitly pass cluster name) 🟩🟩🟩🟩"
-          aws ecs describe-clusters --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name
-          echo "🎟️🎟️🎟️🎟️ aws ecs list-container-instances --cluster aqua-ecs-cluster-name 🎟️ empty for now since Fargate is not exposed here (will see when i go to EC2) 🎟️🎟️🎟️🎟️"
-          aws ecs list-container-instances --cluster aqua-ecs-cluster-name
-          echo "💙💙💙💙 aws ecs list-task-definitions 💙 Should have the TF definition for Aqua 💙💙💙💙"
-          aws ecs list-task-definitions
-          echo "🟪🟪🟪🟪 aws ecs list-services --cluster aqua-ecs-cluster-name 🟪 Once running it should show aqua service 🟪🟪🟪🟪"
-          aws ecs list-services --cluster aqua-ecs-cluster-name
-          echo "🟧🟧🟧🟧 aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name 🟧🟧🟧🟧"
-          aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name
-          echo "⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬ DONE ⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬⏬"
 
 
 # # 💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄 
@@ -145,15 +101,15 @@ jobs:
 #
 #  DANTODO: i should check if a service is already running and skip this if so (so i dont get that idempotent error)
 
-      - name: 7 Create the Service, ie Run the Image -------------------------
+      - name: 9 Create the Service, ie Run the Image 
         env: 
           ECR_SEC_GROUP: ${{ env.aqua_security_group}}
           ECR_SUBNET: ${{ env.aqua_subnet}}
         run: |
           echo
-          echo "ECR SECURITY GROUP >> $ECR_SEC_GROUP <<"
-          echo "ECR SUBNET $ECR_SUBNET <<"
-          echo "💄💄💄💄💄💄💄💄 aws ecs create-service 💄 Run the container 💄💄💄💄💄💄💄💄"
+          echo "💄 ECR SECURITY GROUP >> $ECR_SEC_GROUP <<"
+          echo "💄 ECR SUBNET >> $ECR_SUBNET <<"
+          echo "💄💄💄💄💄💄💄💄 aws ecs create-service 💄💄💄💄💄💄💄💄"
           aws ecs create-service \
             --cluster aqua-ecs-cluster-name \
             --task-definition aqua-ecs-task-family \
@@ -162,60 +118,57 @@ jobs:
             --launch-type FARGATE \
             --network-configuration "awsvpcConfiguration={subnets=[$ECR_SUBNET],securityGroups=[$ECR_SEC_GROUP],assignPublicIp=ENABLED}" \
             --desired-count 1
-          echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
+          echo "💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄💄"
 
 
 # Get variables to determine IP of the service
-# DANHERE 2.9 1014am: this is broken b/c aqua_task_arn is never getting created - maybe i need to sleep or wait till previous step is done
-      - name: 8 grab vars 872527
+# DANHERE 2.9 1239pm: replace these sleeps with some kind of while == NULL loop
+      - name: 10 Get Task Arn
         id: varsstuff-872527
         run: |
           echo
-          echo "sleeping 90 this could cause an Error if i dont give enough time for the variable to be created"
-          sleep 90
+          echo "DANTODO: sleeping 75 this could cause an Error if i dont give enough time for the variable to be created"
+          sleep 75
           echo "get the task arn"
           echo "aqua_task_arn=$(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep :task | sed 's/[[:space:]]//g' | sed 's/"//g')" >> $GITHUB_ENV
-          echo "${{ env.aqua_task_arn }}" 
-          echo "dan done 987238"
+          echo "Task Arn Env Var >> ${{ env.aqua_task_arn }} << (probably empty?)" 
 
 
-      - name: tempaaaaa
+      - name: 10a Confirming Task Arn
         run: |
           echo 
           echo "TRY TRY Aagin"
-          echo "${{ env.aqua_task_arn }}" 
-          echo "dan done 2379872r98yhw"
+          echo " Task Arn >> ${{ env.aqua_task_arn }} << (probably not empty... its somthing about going to next step)" 
 
 
-      - name: 9 Get ENI -------------------------
+      - name: 11 Get Network Interface Variable 
         env: 
           TASK_ARN: ${{ env.aqua_task_arn}}
         run: |
           echo
           echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks $TASK_ARN | grep -o 'eni-[^"]*')" >> $GITHUB_ENV
-          echo "sleeping to allow eni to get created"
-          sleep 15
+          echo "sleeping 6 to allow ENI to get created"
+          sleep 6
           echo " ok is the ENI here >>${{ env.aqua_eni }} <<"
 
           
 
-      - name: 10 finally get the ip -------------------------
+      - name: 12 Get the IP Address
         env: 
           AQUA_ENI_YUP: ${{ env.aqua_eni }}
         run: |
           echo
-          echo "AQUA ENI: $AQUA_ENI_YUP OOOOOOO"
+          echo "Network Interface ID >> $AQUA_ENI_YUP <<"
           echo "aqua_public_ip=$(aws ec2 describe-network-interfaces --network-interface-ids $AQUA_ENI_YUP | grep PublicIp | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')" >> $GITHUB_ENV
           echo "${{ env.aqua_public_ip }}"
           
 
 
-      - name: 11 show me da IP -------------------------
+      - name: 13 Show the Resulting URL
         env: 
           WEBSITE_IP: ${{ env.aqua_public_ip }}
         run: |
           echo
-          echo "🍤🍤🍤🍤🍤🍤🍤🍤 go to $WEBSITE_IP 🍤🍤🍤🍤🍤🍤"
           echo "✅✅✅✅✅✅✅ Visit web server at http://$WEBSITE_IP:8072 ✅✅✅✅✅✅✅"
 
     
