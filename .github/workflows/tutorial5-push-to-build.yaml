@@ -188,6 +188,7 @@ jobs:
           TASK_ARN: ${{ env.aqua_task_arn}}
         run: |
           echo
+          echo "the TASK_ARN-yah $TASK_ARN"
           echo "aqua_eni=$(aws ecs describe-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --tasks $TASK_ARN | grep eni | grep -o 'eni-[^"]*)" >> $GITHUB_ENV
 
 
