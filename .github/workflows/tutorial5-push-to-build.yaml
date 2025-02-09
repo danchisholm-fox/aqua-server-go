@@ -30,26 +30,6 @@ jobs:
 
 
 
-      - name: 1b Delete any previous services running
-        env: 
-          SERVICE_REGION: ${{ env.AWS_REGION }}
-        run: |
-          echo
-          echo danno
-          echo ${{ env.AWS_REGION }}
-          echo "XXXXXXXX aws ecs delete-service blah blah  XXXXXX"
-          aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region us-east-1 --service aqua-ecs-soiviss --force
-  
-
-
-#       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
-      - name: 2 Build the Docker Image
-        run: |
-          docker build -t aqua-server-1 ../aqua-server-go
-          echo "====================================="
-          ls -al
-          pwd
-
 
       - name: 3 Authenticate GHA with AWS
         uses: aws-actions/configure-aws-credentials@v3
@@ -72,6 +52,28 @@ jobs:
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 535002851677.dkr.ecr.us-east-1.amazonaws.com
 
 
+
+      - name: 5 Delete any previous services running
+        env: 
+          SERVICE_REGION: ${{ env.AWS_REGION }}
+        run: |
+          echo
+          echo danno
+          echo ${{ env.AWS_REGION }}
+          echo "XXXXXXXX aws ecs delete-service blah blah  XXXXXX"
+          aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region us-east-1 --service aqua-ecs-soiviss --force
+    
+  
+
+#       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
+      - name: 22222222 Build the Docker Image
+        run: |
+          docker build -t aqua-server-1 ../aqua-server-go
+          echo "====================================="
+          ls -al
+          pwd
+
+          
       - name: 6 Tag the Image before Uploading
         run: |
           echo
