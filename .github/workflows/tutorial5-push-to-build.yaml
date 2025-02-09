@@ -180,6 +180,7 @@ jobs:
         run: |
           echo "get the task arn"
           echo "aqua_task_arn=$(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep :task | sed 's/[[:space:]]//g' | sed 's/"//g')" >> $GITHUB_ENV
+          echo "aqua_task_arn DWC 38735838> $(aws ecs list-tasks --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name | grep :task | sed 's/[[:space:]]//g' | sed 's/"//g')"
 
 
 
