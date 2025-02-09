@@ -61,7 +61,8 @@ jobs:
           echo "Env region is >> ${{ env.AWS_REGION }} <<"
           echo "XXXXXXXX aws ecs delete-service blah blah  XXXXXX"
           aws ecs delete-service --cluster arn:aws:ecs:us-east-1:535002851677:cluster/aqua-ecs-cluster-name --region us-east-1 --service aqua-ecs-soiviss --force
-          sleep 15
+          echo "DANTODO: Deletion and draining of service has started.  Sleeping for 35 secs to mitigate a race condition"
+          sleep 35
   
 
 #       run docker build -t aqua-server-1 ../aqua-server-go --tag my-aqua-server-tag:$(date +%s) # this also works, but just creates another image which i dont need
