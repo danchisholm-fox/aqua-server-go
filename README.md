@@ -1,6 +1,9 @@
 # ###############################################################
 #
-#   WEBSERVER BLUE - started around sept 2024
+#   WEBSERVER AQUA - started around sept 2024
+#     last updated - august 18, 2025 - but only that i tweaked this
+#       README.  look at the Dockerfile which shows a timestamp of
+#       5.5.25, so thats probbly the last legit update.  start there.
 #
 # NEXT STEPS
 # DONE ~12.10 - use TF to build and start ec2 infra
@@ -27,14 +30,6 @@
 # ###############################################################
 
 
-
-# OLD BELOW
-
-test - dan chisholm - please ignore - 11sept2024
-
-update 3 - i just did some stuffy stuff
-
-update 4 - just messin with new commits 913pm PT
 
 
 *** GITHUB INSTRUCTIONS ***

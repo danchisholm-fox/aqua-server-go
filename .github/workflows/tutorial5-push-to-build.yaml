@@ -53,7 +53,7 @@ jobs:
 
 
 # DANTODO 2.9: i must replace this sleep - because it creates race condition if the old service is still draining before the later create-service gets called
-      - name: 4 Delete any previous services running
+      - name: 4 Delete any previous services running, takes about 33 secs
         env: 
           SERVICE_REGION: ${{ env.AWS_REGION }}
         run: |
@@ -115,6 +115,7 @@ jobs:
 # DANTODO - TF destroy needs to delete the ECS service and the ECR image
 #
 #  DANTODO: i should check if a service is already running and skip this if so (so i dont get that idempotent error)
+#  DANTODO 2.9: i should remove the sleep up earlier when i start draining, and should just pause here until the service is deleted before i actually do this create-service command
 
       - name: 10 Create the Service, ie Run the Image 
         env: 
