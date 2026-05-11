@@ -1,5 +1,7 @@
 # ###############################################################
 #
+# 5.11.2026 added zander as collab
+#
 #   WEBSERVER AQUA - started around sept 2024
 #     last updated - august 18, 2025 - but only that i tweaked this
 #       README.  look at the Dockerfile which shows a timestamp of
